@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员管理后台 - ETF 交易策略系统</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#2c3e50">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔧 会员管理后台</h1>
+            <p class="subtitle">ETF 交易策略系统 · 管理员面板</p>
+        </header>
+        
+        <section class="admin-login" id="adminLoginSection">
+            <div class="login-card">
+                <h3>管理员登录</h3>
+                <input type="password" id="adminKeyInput" placeholder="请输入管理员密钥" class="login-input">
+                <button onclick="adminLogin()" class="login-btn">登录</button>
+            </div>
+        </section>
+        
+        <section class="admin-panel" id="adminPanel" style="display: none;">
+            <div class="admin-toolbar">
+                <h3>会员列表</h3>
+                <div class="toolbar-actions">
+                    <span id="memberStats" class="member-stats"></span>
+                    <button onclick="loadMembers()" class="refresh-btn">🔄 刷新列表</button>
+                    <button onclick="adminLogout()" class="logout-btn">退出</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>邮箱</th>
+                            <th>状态</th>
+                            <th>到期日期</th>
+                            <th>注册时间</th>
+                            <th>审核时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memberTable">
+                        <tr><td colspan="7" style="text-align:center;">请登录后查看</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        const API_URL = 'https://picfik.com/member_api.php';
+        let adminKey = '';
+        
+        function adminLogin() {
+            adminKey = document.getElementById('adminKeyInput').value.trim();
+            if (!adminKey) {
+                alert('请输入管理员密钥');
+                return;
+            }
+            loadMembers();
+        }
+        
+        function adminLogout() {
+            adminKey = '';
+            document.getElementById('adminLoginSection').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminKeyInput').value = '';
+        }
+        
+        async function loadMembers() {
+            try {
+                const response = await fetch(API_URL + '?action=admin_list', {
+                    headers: { 'X-Admin-Key': adminKey }
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    document.getElementById('adminLoginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    renderMembers(data.members);
+                    
+                    const approved = data.members.filter(m => m.status === 'approved').length;
+                    const pending = data.members.filter(m => m.status === 'pending').length;
+                    const expired = data.members.filter(m => m.status === 'expired').length;
+                    document.getElementById('memberStats').textContent = 
+                        `会员: ${approved} | 待审: ${pending} | 过期: ${expired} | 总计: ${data.count}`;
+                } else {
+                    alert('登录失败: ' + data.message);
+                }
+            } catch (error) {
+                alert('请求失败: ' + error.message);
+            }
+        }
+        
+        function renderMembers(members) {
+            const tbody = document.getElementById('memberTable');
+            tbody.innerHTML = '';
+            
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">暂无注册会员</td></tr>';
+                return;
+            }
+            
+            members.forEach(m => {
+                const row = document.createElement('tr');
+                const statusClass = getStatusClass(m.status);
+                
+                row.innerHTML = `
+                    <td>${m.id}</td>
+                    <td>${m.email}</td>
+                    <td><span class="status-badge ${statusClass}">${getStatusText(m.status)}</span></td>
+                    <td>
+                        <input type="date" id="expire_${m.id}" value="${m.expire_date || ''}" class="date-input">
+                    </td>
+                    <td>${m.created_at || '-'}</td>
+                    <td>${m.approved_at || '-'}</td>
+                    <td class="action-cell">
+                        <button onclick="updateMember(${m.id}, 'approved')" class="btn-approve">通过</button>
+                        <button onclick="updateMember(${m.id}, 'rejected')" class="btn-reject">拒绝</button>
+                        <button onclick="deleteMember(${m.id})" class="btn-delete">删除</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        async function updateMember(id, status) {
+            const expireDate = document.getElementById('expire_' + id).value;
+            
+            if (status === 'approved' && !expireDate) {
+                alert('请设置会员到期日期');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Key': adminKey
+                    },
+                    body: JSON.stringify({
+                        action: 'admin_update',
+                        id: id,
+                        status: status,
+                        expire_date: expireDate
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('更新成功');
+                    loadMembers();
+                } else {
+                    alert('更新失败: ' + data.message);
+                }
+            } catch (error) {
+                alert('请求失败: ' + error.message);
+            }
+        }
+        
+        async function deleteMember(id) {
+            if (!confirm('确定删除此会员记录？')) return;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Key': adminKey
+                    },
+                    body: JSON.stringify({
+                        action: 'admin_delete',
+                        id: id
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('删除成功');
+                    loadMembers();
+                } else {
+                    alert('删除失败: ' + data.message);
+                }
+            } catch (error) {
+                alert('请求失败: ' + error.message);
+            }
+        }
+        
+        function getStatusText(status) {
+            const map = {
+                'pending': '待审核',
+                'approved': '已通过',
+                'rejected': '已拒绝',
+                'expired': '已过期'
+            };
+            return map[status] || status;
+        }
+        
+        function getStatusClass(status) {
+            const map = {
+                'pending': 'status-pending',
+                'approved': 'status-approved',
+                'rejected': 'status-rejected',
+                'expired': 'status-expired'
+            };
+            return map[status] || '';
+        }
+        
+        document.getElementById('adminKeyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') adminLogin();
+        });
+    </script>
+</body>
+</html>
