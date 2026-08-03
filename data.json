@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-08-03 14:26:16",
+  "last_updated": "2026-08-03 14:30:14",
   "signals": [
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "510210",
       "etf_name": "上证指数ETF富国",
-      "latest_price": 0.971,
-      "change": -0.41,
+      "latest_price": 0.97,
+      "change": -0.51,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -17,11 +17,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "159613",
       "etf_name": "信息安全ETF嘉实",
-      "latest_price": 0.867,
-      "change": 0.23,
+      "latest_price": 0.866,
+      "change": 0.12,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -32,11 +32,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "512480",
       "etf_name": "半导体ETF国联安",
-      "latest_price": 0.932,
-      "change": -6.05,
+      "latest_price": 0.928,
+      "change": -6.45,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "是",
@@ -47,11 +47,11 @@
       "action": "建仓"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "159770",
       "etf_name": "机器人ETF天弘",
-      "latest_price": 1.003,
-      "change": 1.31,
+      "latest_price": 1.0,
+      "change": 1.01,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -62,11 +62,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "562500",
       "etf_name": "机器人ETF华夏",
-      "latest_price": 0.968,
-      "change": 1.26,
+      "latest_price": 0.966,
+      "change": 1.05,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -77,11 +77,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:04",
       "etf_code": "159611",
       "etf_name": "电力ETF广发",
-      "latest_price": 1.084,
-      "change": 1.12,
+      "latest_price": 1.085,
+      "change": 1.21,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -92,7 +92,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "516880",
       "etf_name": "光伏ETF银华",
       "latest_price": 0.707,
@@ -107,7 +107,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:09",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "516090",
       "etf_name": "新能源ETF易方达",
       "latest_price": 0.486,
@@ -122,11 +122,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "515050",
       "etf_name": "通信ETF华夏",
-      "latest_price": 0.911,
-      "change": -0.98,
+      "latest_price": 0.909,
+      "change": -1.2,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -137,11 +137,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "516510",
       "etf_name": "云计算ETF易方达",
-      "latest_price": 1.67,
-      "change": "",
+      "latest_price": 1.667,
+      "change": -0.18,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -152,11 +152,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "516630",
       "etf_name": "云计算ETF华夏",
-      "latest_price": 1.63,
-      "change": 0.12,
+      "latest_price": 1.626,
+      "change": -0.12,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -167,11 +167,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:05",
       "etf_code": "515980",
       "etf_name": "人工智能ETF华富",
-      "latest_price": 0.989,
-      "change": -1.88,
+      "latest_price": 0.986,
+      "change": -2.18,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -182,7 +182,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "159985",
       "etf_name": "豆粕ETF华夏",
       "latest_price": 2.089,
@@ -197,11 +197,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "513400",
       "etf_name": "道琼斯ETF鹏华",
-      "latest_price": 1.306,
-      "change": 0.54,
+      "latest_price": 1.307,
+      "change": 0.62,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -212,11 +212,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "520600",
       "etf_name": "港股通汽车ETF广发",
-      "latest_price": 1.073,
-      "change": -0.56,
+      "latest_price": 1.072,
+      "change": -0.65,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -227,11 +227,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "513880",
       "etf_name": "日经225ETF华安",
-      "latest_price": 2.047,
-      "change": 1.14,
+      "latest_price": 2.049,
+      "change": 1.24,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -242,11 +242,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "513920",
       "etf_name": "港股通央企红利ETF华安",
-      "latest_price": 1.581,
-      "change": -0.57,
+      "latest_price": 1.58,
+      "change": -0.63,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -257,11 +257,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "159892",
       "etf_name": "恒生医药ETF华夏",
-      "latest_price": 0.706,
-      "change": -1.26,
+      "latest_price": 0.705,
+      "change": -1.4,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -272,11 +272,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "513310",
       "etf_name": "中韩半导体ETF华泰柏瑞",
-      "latest_price": 4.458,
-      "change": -3.09,
+      "latest_price": 4.433,
+      "change": -3.63,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -287,7 +287,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "513050",
       "etf_name": "中概互联网ETF易方达",
       "latest_price": 1.18,
@@ -302,11 +302,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:06",
       "etf_code": "518680",
       "etf_name": "金ETF富国",
-      "latest_price": 8.823,
-      "change": -0.16,
+      "latest_price": 8.821,
+      "change": -0.18,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -317,11 +317,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:10",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "516150",
       "etf_name": "稀土ETF嘉实",
-      "latest_price": 1.654,
-      "change": 1.29,
+      "latest_price": 1.652,
+      "change": 1.16,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -332,11 +332,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "562800",
       "etf_name": "稀有金属ETF嘉实",
-      "latest_price": 0.883,
-      "change": 0.8,
+      "latest_price": 0.88,
+      "change": 0.46,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -347,7 +347,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "159766",
       "etf_name": "旅游ETF富国",
       "latest_price": 0.581,
@@ -362,11 +362,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "159566",
       "etf_name": "储能电池ETF易方达",
-      "latest_price": 1.767,
-      "change": -0.23,
+      "latest_price": 1.764,
+      "change": -0.4,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -377,11 +377,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "159241",
       "etf_name": "航空航天ETF天弘",
-      "latest_price": 1.011,
-      "change": 1.51,
+      "latest_price": 1.01,
+      "change": 1.41,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -392,11 +392,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:07",
       "etf_code": "513120",
       "etf_name": "港股创新药ETF广发",
-      "latest_price": 1.137,
-      "change": -1.56,
+      "latest_price": 1.136,
+      "change": -1.65,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -407,11 +407,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "159851",
       "etf_name": "金融科技ETF华宝",
-      "latest_price": 0.633,
-      "change": 0.32,
+      "latest_price": 0.631,
+      "change": "",
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -422,11 +422,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "512010",
       "etf_name": "医药ETF易方达",
-      "latest_price": 0.375,
-      "change": -0.53,
+      "latest_price": 0.374,
+      "change": -0.8,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -437,7 +437,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "159928",
       "etf_name": "消费ETF汇添富",
       "latest_price": 0.692,
@@ -452,7 +452,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "512170",
       "etf_name": "医疗ETF华宝",
       "latest_price": 0.328,
@@ -467,11 +467,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "515230",
       "etf_name": "软件ETF国泰",
-      "latest_price": 0.725,
-      "change": 0.69,
+      "latest_price": 0.723,
+      "change": 0.42,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -482,11 +482,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "515790",
       "etf_name": "光伏ETF华泰柏瑞",
-      "latest_price": 0.831,
-      "change": 1.84,
+      "latest_price": 0.83,
+      "change": 1.72,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -497,11 +497,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:11",
+      "date": "2026-08-03 14:30:08",
       "etf_code": "515220",
       "etf_name": "煤炭ETF国泰",
-      "latest_price": 1.186,
-      "change": -1.08,
+      "latest_price": 1.185,
+      "change": -1.17,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -512,11 +512,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "512400",
       "etf_name": "有色金属ETF南方",
-      "latest_price": 1.784,
-      "change": -0.45,
+      "latest_price": 1.78,
+      "change": -0.67,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -527,7 +527,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "513690",
       "etf_name": "港股红利ETF博时",
       "latest_price": 1.142,
@@ -542,11 +542,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "159819",
       "etf_name": "人工智能ETF易方达",
-      "latest_price": 1.732,
-      "change": -1.87,
+      "latest_price": 1.726,
+      "change": -2.21,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -557,11 +557,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "512200",
       "etf_name": "房地产ETF南方",
-      "latest_price": 1.192,
-      "change": 0.34,
+      "latest_price": 1.191,
+      "change": 0.25,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -572,11 +572,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "512690",
       "etf_name": "酒ETF鹏华",
-      "latest_price": 0.448,
-      "change": -1.1,
+      "latest_price": 0.449,
+      "change": -0.88,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -587,11 +587,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:09",
       "etf_code": "159870",
       "etf_name": "化工ETF鹏华",
-      "latest_price": 0.78,
-      "change": -0.13,
+      "latest_price": 0.779,
+      "change": -0.26,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -602,7 +602,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "159869",
       "etf_name": "游戏ETF华夏",
       "latest_price": 1.13,
@@ -617,11 +617,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "159530",
       "etf_name": "机器人ETF易方达",
-      "latest_price": 1.349,
-      "change": 2.27,
+      "latest_price": 1.347,
+      "change": 2.12,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -632,11 +632,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "517900",
       "etf_name": "银行AH优选ETF招商",
-      "latest_price": 1.558,
-      "change": -0.06,
+      "latest_price": 1.559,
+      "change": "",
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -647,11 +647,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "512660",
       "etf_name": "军工ETF国泰",
-      "latest_price": 1.102,
-      "change": 0.82,
+      "latest_price": 1.101,
+      "change": 0.73,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -662,11 +662,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:12",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "512880",
       "etf_name": "证券ETF国泰",
-      "latest_price": 1.106,
-      "change": -0.09,
+      "latest_price": 1.104,
+      "change": -0.27,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -677,11 +677,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "159995",
       "etf_name": "芯片ETF华夏",
-      "latest_price": 1.05,
-      "change": -6.08,
+      "latest_price": 1.045,
+      "change": -6.53,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "是",
@@ -692,11 +692,11 @@
       "action": "建仓"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:10",
       "etf_code": "159201",
       "etf_name": "自由现金流ETF华夏",
-      "latest_price": 1.186,
-      "change": -0.08,
+      "latest_price": 1.187,
+      "change": "",
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -707,11 +707,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "159967",
       "etf_name": "创业板成长ETF华夏",
-      "latest_price": 0.718,
-      "change": -1.64,
+      "latest_price": 0.715,
+      "change": -2.05,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -722,11 +722,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "159338",
       "etf_name": "中证A500ETF国泰",
-      "latest_price": 1.194,
-      "change": -0.91,
+      "latest_price": 1.193,
+      "change": -1.0,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -737,11 +737,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "588000",
       "etf_name": "科创50ETF华夏",
-      "latest_price": 1.655,
-      "change": -4.22,
+      "latest_price": 1.647,
+      "change": -4.69,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "是",
@@ -752,11 +752,11 @@
       "action": "建仓"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "510500",
       "etf_name": "中证500ETF南方",
-      "latest_price": 7.457,
-      "change": -0.57,
+      "latest_price": 7.442,
+      "change": -0.77,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -767,11 +767,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "512100",
       "etf_name": "中证1000ETF南方",
-      "latest_price": 2.876,
-      "change": 0.42,
+      "latest_price": 2.872,
+      "change": 0.28,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -782,7 +782,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "513330",
       "etf_name": "恒生互联网ETF华夏",
       "latest_price": 0.411,
@@ -797,7 +797,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:13",
+      "date": "2026-08-03 14:30:11",
       "etf_code": "513180",
       "etf_name": "恒生科技ETF华夏",
       "latest_price": 0.615,
@@ -812,7 +812,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "513060",
       "etf_name": "恒生医疗ETF博时",
       "latest_price": 0.522,
@@ -827,7 +827,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "513100",
       "etf_name": "纳指ETF国泰",
       "latest_price": 2.128,
@@ -842,11 +842,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "159941",
       "etf_name": "纳指ETF广发",
-      "latest_price": 1.586,
-      "change": 0.76,
+      "latest_price": 1.587,
+      "change": 0.83,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -857,11 +857,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "513500",
       "etf_name": "标普500ETF博时",
-      "latest_price": 2.525,
-      "change": 0.64,
+      "latest_price": 2.527,
+      "change": 0.72,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -872,7 +872,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "510900",
       "etf_name": "恒生中国企业ETF易方达",
       "latest_price": 1.07,
@@ -887,11 +887,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "159920",
       "etf_name": "恒生ETF华夏",
-      "latest_price": 1.534,
-      "change": 0.79,
+      "latest_price": 1.532,
+      "change": 0.66,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -902,11 +902,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:12",
       "etf_code": "513520",
       "etf_name": "日经ETF华夏",
-      "latest_price": 2.203,
-      "change": 1.66,
+      "latest_price": 2.204,
+      "change": 1.71,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -917,11 +917,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "159866",
       "etf_name": "日经ETF工银",
-      "latest_price": 1.633,
-      "change": 1.62,
+      "latest_price": 1.634,
+      "change": 1.68,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -932,11 +932,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "513290",
       "etf_name": "纳指生物科技ETF汇添富",
-      "latest_price": 1.58,
-      "change": -1.5,
+      "latest_price": 1.579,
+      "change": -1.56,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -947,11 +947,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:14",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "513350",
       "etf_name": "标普油气ETF富国",
-      "latest_price": 1.229,
-      "change": -0.57,
+      "latest_price": 1.228,
+      "change": -0.65,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -962,7 +962,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "159735",
       "etf_name": "港股消费ETF银华",
       "latest_price": 0.695,
@@ -977,11 +977,11 @@
       "action": "清仓"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "513090",
       "etf_name": "香港证券ETF易方达",
-      "latest_price": 1.831,
-      "change": -0.49,
+      "latest_price": 1.829,
+      "change": -0.6,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -992,7 +992,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "513030",
       "etf_name": "德国ETF华安",
       "latest_price": 1.836,
@@ -1007,11 +1007,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "159687",
       "etf_name": "亚太精选ETF南方",
-      "latest_price": 1.796,
-      "change": -0.22,
+      "latest_price": 1.798,
+      "change": -0.11,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -1022,7 +1022,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "159329",
       "etf_name": "沙特ETF南方",
       "latest_price": 0.89,
@@ -1037,7 +1037,7 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:13",
       "etf_code": "159100",
       "etf_name": "巴西ETF华夏",
       "latest_price": 1.131,
@@ -1052,11 +1052,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:14",
       "etf_code": "159567",
       "etf_name": "港股创新药ETF银华",
-      "latest_price": 0.656,
-      "change": -1.65,
+      "latest_price": 0.655,
+      "change": -1.8,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
@@ -1067,11 +1067,11 @@
       "action": "观望"
     },
     {
-      "date": "2026-08-03 14:26:15",
+      "date": "2026-08-03 14:30:14",
       "etf_code": "159915",
       "etf_name": "创业板ETF易方达",
-      "latest_price": 3.338,
-      "change": -0.89,
+      "latest_price": 3.328,
+      "change": -1.19,
       "latest_date": "2026-08-03",
       "has_position": "否",
       "buy_signal": "否",
