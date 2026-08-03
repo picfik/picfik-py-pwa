@@ -49,7 +49,15 @@ async function handleAuth() {
     
     try {
         const result = await verifyMemberOnline(email);
-        processAuthResult(result, email);
+        
+        // 如果在线检查返回 no_data，回退到本地存储
+        if (result.member_status === 'no_data') {
+            console.warn('在线会员列表不可用，使用本地存储模式');
+            const localResult = verifyMemberLocal(email);
+            processAuthResult(localResult, email);
+        } else {
+            processAuthResult(result, email);
+        }
     } catch (error) {
         // 网络错误，使用本地存储回退
         console.warn('网络错误，使用本地存储模式:', error.message);
@@ -64,14 +72,16 @@ async function handleAuth() {
 async function verifyMemberOnline(email) {
     const members = await loadMembersList();
     
-    if (!members || members.length === 0) {
-        return { member_status: 'no_data', message: '会员列表为空，请联系管理员初始化系统' };
+    if (!members) {
+        // 文件不存在或加载失败
+        return { member_status: 'no_data', message: '会员系统未初始化，请联系管理员' };
     }
     
+    // 空会员列表：该邮箱未注册
     const member = members.find(m => m.email === email);
     
     if (!member) {
-        return { member_status: 'not_registered', message: '该邮箱尚未注册' };
+        return { member_status: 'not_registered', message: '该邮箱尚未注册，请联系管理员添加会员' };
     }
     
     // 检查是否过期
@@ -91,27 +101,63 @@ async function verifyMemberOnline(email) {
 }
 
 // 加载会员列表（带缓存）
+// 返回 null 表示文件不存在/未初始化
+// 返回 [] 表示文件存在但会员为空
 async function loadMembersList() {
     const now = Date.now();
-    if (membersCache && (now - membersCacheTime) < MEMBERS_CACHE_DURATION) {
+    if (membersCache !== null && (now - membersCacheTime) < MEMBERS_CACHE_DURATION) {
         return membersCache;
     }
     
+    // 先尝试从 GitHub Pages 加载
     try {
         const response = await fetch(MEMBERS_JSON_URL + '?t=' + now, {
             cache: 'no-store',
             headers: { 'Accept': 'application/json' }
         });
         
+        if (response.status === 404) {
+            // GitHub Pages 上没有，尝试本地加载
+            return await loadMembersFromLocal(now);
+        }
+        
         if (!response.ok) throw new Error('无法加载会员列表');
         
         const data = await response.json();
         membersCache = data.members || [];
         membersCacheTime = now;
+        console.log('会员列表从 GitHub Pages 加载成功');
         return membersCache;
     } catch (error) {
-        console.log('加载会员列表失败:', error.message);
-        throw error;
+        console.log('GitHub Pages 加载失败，尝试本地:', error.message);
+        // 网络错误时尝试本地加载
+        return await loadMembersFromLocal(now);
+    }
+}
+
+// 从本地文件加载会员列表
+async function loadMembersFromLocal(now) {
+    try {
+        const response = await fetch('members.json?t=' + now, { cache: 'no-store' });
+        
+        if (response.status === 404) {
+            membersCache = null;
+            membersCacheTime = now;
+            return null;
+        }
+        
+        if (!response.ok) throw new Error('本地 members.json 加载失败');
+        
+        const data = await response.json();
+        membersCache = data.members || [];
+        membersCacheTime = now;
+        console.log('会员列表从本地加载成功');
+        return membersCache;
+    } catch (error) {
+        console.log('本地加载也失败:', error.message);
+        membersCache = null;
+        membersCacheTime = now;
+        return null;
     }
 }
 
@@ -132,6 +178,19 @@ function verifyMemberLocal(email) {
     
     if (memberData) {
         const member = JSON.parse(memberData);
+        
+        // 检查是否过期
+        if (member.status === 'approved' && member.expire_date) {
+            const expireDate = new Date(member.expire_date);
+            if (new Date() > expireDate) {
+                return {
+                    member_status: 'expired',
+                    expire_date: member.expire_date,
+                    message: '会员已过期，请使用 local_admin.html 续期'
+                };
+            }
+        }
+        
         return {
             member_status: member.status,
             expire_date: member.expire_date,
@@ -139,7 +198,7 @@ function verifyMemberLocal(email) {
         };
     }
     
-    // 未注册，自动注册到本地
+    // 未注册，自动注册到本地（pending 状态）
     const newMember = {
         email: email,
         status: 'pending',
@@ -149,8 +208,8 @@ function verifyMemberLocal(email) {
     localStorage.setItem(memberKey, JSON.stringify(newMember));
     
     return {
-        member_status: 'not_registered',
-        message: '本地注册成功！请等待管理员审核'
+        member_status: 'pending',
+        message: '本地注册成功！状态为"待审核"。请使用 local_admin.html 将您设置为"已通过"会员。'
     };
 }
 
@@ -163,16 +222,16 @@ function processAuthResult(result, email) {
             showAuthMessage('该邮箱尚未注册，请联系管理员添加会员。<br><br>管理员入口：<a href="admin.html" target="_blank">admin.html</a>', 'info');
             break;
         case 'pending':
-            showAuthMessage('您的注册申请正在等待管理员审核，请稍后再试。<br><br>如需立即开通，请联系管理员。', 'info');
+            showAuthMessage(result.message || '您的注册申请正在等待审核。<br><br>请打开 <a href="local_admin.html" target="_blank">本地管理工具</a> 将您设置为会员。', 'info');
             break;
         case 'rejected':
             showAuthMessage('您的注册申请未通过审核，请联系管理员。', 'error');
             break;
         case 'expired':
-            showAuthMessage('您的会员已过期，请联系管理员续期。', 'error');
+            showAuthMessage(result.message || '您的会员已过期，请联系管理员续期。', 'error');
             break;
         case 'no_data':
-            showAuthMessage('系统会员列表尚未初始化，请联系管理员先登录 admin.html 创建会员数据。', 'error');
+            showAuthMessage('会员系统未初始化，请联系管理员。<br><br>或使用 <a href="local_admin.html" target="_blank">本地管理工具</a> 进行测试。', 'error');
             break;
         default:
             showAuthMessage(result.message || '验证失败', 'error');
@@ -187,12 +246,20 @@ async function verifyMember(email, isAutoLogin) {
         
         if (result.member_status === 'approved') {
             loginSuccess(email, result.expire_date);
+        } else if (result.member_status === 'no_data') {
+            // 在线不可用，尝试本地模式
+            const localResult = verifyMemberLocal(email);
+            if (localResult.member_status === 'approved') {
+                loginSuccess(email, localResult.expire_date);
+            } else if (!isAutoLogin) {
+                localStorage.removeItem('memberEmail');
+                showAuthMessage(localResult.message || '验证失败', 'error');
+            }
         } else {
-            localStorage.removeItem('memberEmail');
             if (!isAutoLogin) {
+                localStorage.removeItem('memberEmail');
                 showAuthMessage(result.message || '会员验证失败', 'error');
             } else {
-                // 自动登录时不显示错误
                 console.log('会员状态异常:', result.member_status);
             }
         }
