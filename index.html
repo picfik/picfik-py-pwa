@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF 交易策略检验系统</title>
+    
+    <!-- PWA 配置 -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+    
+    <!-- 中文字体和样式 -->
+    <link rel="stylesheet" href="style.css">
+    
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="description" content="ETF 交易策略实时监控系统">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📈 ETF 交易策略系统</h1>
+            <p class="subtitle">实时监控 · 智能分析 · 交易信号</p>
+            <div class="time-display">
+                <span id="currentTime">加载中...</span>
+                <button id="refreshBtn" class="refresh-btn" onclick="refreshData()">🔄 刷新</button>
+            </div>
+        </header>
+        
+        <section class="status-bar">
+            <div class="status-item">
+                <span class="status-label">数据更新时间:</span>
+                <span id="lastUpdated" class="status-value">等待加载...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">数据来源:</span>
+                <span id="dataSource" class="status-value">-</span>
+            </div>
+        </section>
+        
+        <section class="summary">
+            <div class="summary-card buy">
+                <div class="summary-number" id="buyCount">0</div>
+                <div class="summary-label">💰 建议建仓</div>
+            </div>
+            <div class="summary-card sell">
+                <div class="summary-number" id="sellCount">0</div>
+                <div class="summary-label">📤 建议清仓</div>
+            </div>
+            <div class="summary-card watch">
+                <div class="summary-number" id="watchCount">0</div>
+                <div class="summary-label">👀 观望</div>
+            </div>
+            <div class="summary-card confirm">
+                <div class="summary-number" id="confirmCount">0</div>
+                <div class="summary-label">⚠️ 待确认</div>
+            </div>
+        </section>
+        
+        <section class="filter-section">
+            <h3>筛选条件</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="建仓">建仓</button>
+                <button class="filter-btn" data-filter="清仓">清仓</button>
+                <button class="filter-btn" data-filter="观望">观望</button>
+                <button class="filter-btn" data-filter="待确认">待确认</button>
+            </div>
+        </section>
+        
+        <section class="table-section">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>代码</th>
+                            <th>名称</th>
+                            <th>最新价</th>
+                            <th>涨跌幅</th>
+                            <th>买入信号</th>
+                            <th>卖出信号</th>
+                            <th>建议操作</th>
+                            <th>持仓</th>
+                        </tr>
+                    </thead>
+                    <tbody id="etfTable">
+                        <tr class="loading-row">
+                            <td colspan="8">正在加载数据...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <section id="detailSection" class="detail-section" style="display: none;">
+            <h3>📋 详细分析</h3>
+            <div id="detailContent" class="detail-content"></div>
+        </section>
+        
+        <footer class="footer">
+            <p>💾 数据存储: 坚果云 + GitHub 双备份</p>
+            <p>🕐 时区: 中国大陆时间 (UTC+8)</p>
+        </footer>
+    </div>
+    
+    <!-- Service Worker 注册 -->
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('Service Worker 注册成功');
+            });
+        }
+    </script>
+</body>
+</html>
