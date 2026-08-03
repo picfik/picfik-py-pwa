@@ -1,0 +1,27 @@
+{
+    "name": "ETF 交易策略检验系统",
+    "short_name": "ETF策略",
+    "description": "实时监控 ETF 交易信号，智能分析买卖时机",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#f5f7fa",
+    "theme_color": "#2c3e50",
+    "orientation": "portrait-primary",
+    "lang": "zh-CN",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["finance", "business"],
+    "shortcuts": [
+        {
+            "name": "刷新数据",
+            "url": "./index.html",
+            "description": "刷新最新交易信号"
+        }
+    ]
+}
