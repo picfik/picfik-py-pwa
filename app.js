@@ -4,24 +4,168 @@ let tradingData = null;
 let autoRefreshInterval = null;
 const REFRESH_INTERVAL = 30000; // 30秒自动刷新
 
-// 坚果云配置 (用于直接读取)
+// 会员 API 地址
+const MEMBER_API_URL = 'https://picfik.com/member_api.php';
+
+// 坚果云配置
 const JIANGUOYUN_CONFIG = {
     username: 'picfik@126.com',
     password: 'a3x43k2ftu7bh2nr',
     url: 'https://dav.jianguoyun.com/dav/picfik-pwa/data.json'
 };
 
-// GitHub 数据源 (主要，因为无CORS问题)
+// GitHub 数据源
 const GITHUB_RAW_URL = 'https://picfik.github.io/picfik-py-pwa/data.json';
+
+// ========== 会员认证逻辑 ==========
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
     setupFilterButtons();
+    
+    // 检查是否已登录
+    const savedEmail = localStorage.getItem('memberEmail');
+    if (savedEmail) {
+        verifyMember(savedEmail, true);
+    }
+    
+    // 回车键登录
+    document.getElementById('emailInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleAuth();
+    });
+});
+
+// 处理注册/登录
+async function handleAuth() {
+    const email = document.getElementById('emailInput').value.trim();
+    
+    if (!email) {
+        showAuthMessage('请输入电子邮箱地址', 'error');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        showAuthMessage('请输入有效的电子邮箱地址', 'error');
+        return;
+    }
+    
+    showAuthLoading(true);
+    
+    try {
+        // 先尝试验证（检查是否已注册）
+        const verifyResult = await fetch(MEMBER_API_URL + '?action=verify&email=' + encodeURIComponent(email))
+            .then(r => r.json());
+        
+        if (verifyResult.member_status === 'approved') {
+            // 已是会员，直接登录
+            loginSuccess(email, verifyResult.expire_date);
+        } else if (verifyResult.member_status === 'not_registered') {
+            // 未注册，自动注册
+            const registerResult = await fetch(MEMBER_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'register', email: email })
+            }).then(r => r.json());
+            
+            if (registerResult.status === 'success') {
+                showAuthMessage('注册成功！请等待管理员审核开通会员权限后再次登录。', 'info');
+            } else {
+                showAuthMessage(registerResult.message || '注册失败', 'error');
+            }
+        } else if (verifyResult.member_status === 'pending') {
+            showAuthMessage('您的注册申请正在等待管理员审核，请稍后再试。', 'info');
+        } else if (verifyResult.member_status === 'rejected') {
+            showAuthMessage('您的注册申请未通过审核，请联系管理员。', 'error');
+        } else if (verifyResult.member_status === 'expired') {
+            showAuthMessage('您的会员已过期，请联系管理员续期。', 'error');
+        } else {
+            showAuthMessage(verifyResult.message || '验证失败', 'error');
+        }
+    } catch (error) {
+        showAuthMessage('网络错误，请稍后重试: ' + error.message, 'error');
+    }
+    
+    showAuthLoading(false);
+}
+
+// 验证会员状态
+async function verifyMember(email, isAutoLogin) {
+    showAuthLoading(true);
+    
+    try {
+        const result = await fetch(MEMBER_API_URL + '?action=verify&email=' + encodeURIComponent(email))
+            .then(r => r.json());
+        
+        if (result.member_status === 'approved') {
+            loginSuccess(email, result.expire_date);
+        } else {
+            // 状态已变，清除登录
+            localStorage.removeItem('memberEmail');
+            if (!isAutoLogin) {
+                showAuthMessage(result.message || '会员验证失败', 'error');
+            }
+        }
+    } catch (error) {
+        if (!isAutoLogin) {
+            showAuthMessage('验证失败: ' + error.message, 'error');
+        }
+    }
+    
+    showAuthLoading(false);
+}
+
+// 登录成功
+function loginSuccess(email, expireDate) {
+    localStorage.setItem('memberEmail', email);
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    document.getElementById('memberExpire').textContent = expireDate || '未设置';
+    
+    // 加载数据
     loadData();
     startAutoRefresh();
-});
+}
+
+// 退出登录
+function logout() {
+    localStorage.removeItem('memberEmail');
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('emailInput').value = '';
+    showAuthMessage('', '');
+    document.getElementById('authMessage').style.display = 'none';
+    
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+}
+
+// 验证邮箱格式
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// 显示认证消息
+function showAuthMessage(message, type) {
+    const msgDiv = document.getElementById('authMessage');
+    if (!message) {
+        msgDiv.style.display = 'none';
+        return;
+    }
+    msgDiv.style.display = 'block';
+    msgDiv.textContent = message;
+    msgDiv.className = 'auth-message ' + type;
+}
+
+// 显示/隐藏加载状态
+function showAuthLoading(show) {
+    document.getElementById('authForm').style.display = show ? 'none' : 'block';
+    document.getElementById('authLoading').style.display = show ? 'flex' : 'none';
+}
+
+// ========== 数据加载逻辑 ==========
 
 // 更新当前时间 (中国大陆时间)
 function updateCurrentTime() {
@@ -42,26 +186,15 @@ function formatDateTime(date) {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// 加载数据 (优先从 GitHub Pages 加载)
+// 加载数据
 async function loadData() {
     try {
-        // 首先尝试从 GitHub Pages 加载 (同源或公开)
         const data = await fetchFromGitHub();
         if (data) {
             processData(data, 'GitHub Pages');
             return;
         }
         
-        // 备份：从坚果云加载
-        console.log('尝试从坚果云加载数据...');
-        const jianguoyunData = await fetchFromJianguoyun();
-        if (jianguoyunData) {
-            processData(jianguoyunData, '坚果云');
-            return;
-        }
-        
-        // 最后尝试从本地路径 (如果直接打开HTML文件)
-        console.log('尝试从本地加载...');
         const localData = await fetchFromLocal();
         if (localData) {
             processData(localData, '本地文件');
@@ -70,7 +203,6 @@ async function loadData() {
         
         showError('无法加载数据，请检查数据源连接');
     } catch (error) {
-        console.error('加载数据失败:', error);
         showError('加载数据失败: ' + error.message);
     }
 }
@@ -79,15 +211,11 @@ async function loadData() {
 async function fetchFromGitHub() {
     try {
         const response = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), {
-            headers: {
-                'Accept': 'application/json'
-            },
+            headers: { 'Accept': 'application/json' },
             cache: 'no-store'
         });
         
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
         const data = await response.json();
         console.log('成功从 GitHub Pages 加载数据');
@@ -98,43 +226,11 @@ async function fetchFromGitHub() {
     }
 }
 
-// 从坚果云获取数据 (使用 WebDAV)
-async function fetchFromJianguoyun() {
-    try {
-        const credentials = btoa(`${JIANGUOYUN_CONFIG.username}:${JIANGUOYUN_CONFIG.password}`);
-        
-        const response = await fetch(JIANGUOYUN_CONFIG.url + '?t=' + Date.now(), {
-            headers: {
-                'Authorization': `Basic ${credentials}`,
-                'Accept': 'application/json'
-            },
-            cache: 'no-store'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('成功从坚果云加载数据');
-        return data;
-    } catch (error) {
-        console.log('坚果云加载失败:', error.message);
-        return null;
-    }
-}
-
 // 从本地路径获取数据
 async function fetchFromLocal() {
     try {
-        const response = await fetch('data.json?t=' + Date.now(), {
-            cache: 'no-store'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
+        const response = await fetch('data.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         console.log('成功从本地加载数据');
         return data;
@@ -177,7 +273,6 @@ function renderTable(signals) {
     const tbody = document.getElementById('etfTable');
     tbody.innerHTML = '';
     
-    // 根据筛选条件过滤
     let filteredSignals = signals;
     if (currentFilter !== 'all') {
         filteredSignals = signals.filter(s => s.action === currentFilter);
@@ -188,7 +283,6 @@ function renderTable(signals) {
         return;
     }
     
-    // 排序：按建议操作优先级
     const actionOrder = { '建仓': 0, '清仓': 1, '待确认': 2, '观望': 3 };
     filteredSignals.sort((a, b) => {
         const orderA = actionOrder[a.action] !== undefined ? actionOrder[a.action] : 99;
@@ -196,7 +290,7 @@ function renderTable(signals) {
         return orderA - orderB;
     });
     
-    filteredSignals.forEach((signal, index) => {
+    filteredSignals.forEach((signal) => {
         const row = document.createElement('tr');
         row.onclick = () => showDetail(signal);
         
@@ -219,7 +313,6 @@ function renderTable(signals) {
     });
 }
 
-// 获取操作对应的CSS类
 function getActionClass(action) {
     switch (action) {
         case '建仓': return 'buy';
@@ -264,7 +357,6 @@ function showDetail(signal) {
         </div>
     `;
     
-    // 滚动到详情区域
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -286,17 +378,13 @@ function setupFilterButtons() {
 
 // 手动刷新
 function refreshData() {
-    console.log('手动刷新数据...');
     loadData();
 }
 
 // 自动刷新
 function startAutoRefresh() {
-    if (autoRefreshInterval) {
-        clearInterval(autoRefreshInterval);
-    }
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
     autoRefreshInterval = setInterval(() => {
-        console.log('自动刷新数据...');
         loadData();
     }, REFRESH_INTERVAL);
 }
@@ -309,11 +397,9 @@ function showError(message) {
 
 // 在线状态检测
 window.addEventListener('online', function() {
-    console.log('网络已恢复，正在重新加载数据...');
     loadData();
 });
 
 window.addEventListener('offline', function() {
-    console.log('网络已断开');
     document.getElementById('dataSource').textContent = '离线模式';
 });
