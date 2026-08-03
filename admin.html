@@ -4,218 +4,752 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>会员管理后台 - ETF 交易策略系统</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="theme-color" content="#2c3e50">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "SimHei", sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 { font-size: 22px; }
+        .header p { font-size: 13px; opacity: 0.8; }
+        
+        .config-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .config-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        
+        .status-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .status-info {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        .status-item {
+            display: flex;
+            gap: 8px;
+        }
+        .status-label { color: #666; font-size: 14px; }
+        .status-value { color: #2c3e50; font-weight: 600; font-size: 14px; }
+        
+        .main-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .panel-header h3 {
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .add-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+        .add-form .form-group { margin-bottom: 0; }
+        .add-form input { padding: 10px 12px; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 13px;
+        }
+        table tr:hover { background: #f8f9fa; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        .status-expired { background: #e2e3e5; color: #383d41; }
+        
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .action-btns button {
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        
+        .empty-row {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px !important;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .toast.success { background: #27ae60; }
+        .toast.error { background: #e74c3c; }
+        .toast.info { background: #3498db; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .date-input {
+            padding: 6px 10px;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .add-form {
+                grid-template-columns: 1fr;
+            }
+            .status-info {
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>🔧 会员管理后台</h1>
-            <p class="subtitle">ETF 交易策略系统 · 管理员面板</p>
-        </header>
-        
-        <section class="admin-login" id="adminLoginSection">
-            <div class="login-card">
-                <h3>管理员登录</h3>
-                <input type="password" id="adminKeyInput" placeholder="请输入管理员密钥" class="login-input">
-                <button onclick="adminLogin()" class="login-btn">登录</button>
+        <div class="header">
+            <div>
+                <h1>🔧 ETF 交易策略系统 - 会员管理</h1>
+                <p>基于 GitHub 的纯 PWA 会员管理系统</p>
             </div>
-        </section>
+            <button class="btn btn-secondary" onclick="logout()" id="logoutBtn" style="display:none;">退出登录</button>
+        </div>
         
-        <section class="admin-panel" id="adminPanel" style="display: none;">
-            <div class="admin-toolbar">
-                <h3>会员列表</h3>
-                <div class="toolbar-actions">
-                    <span id="memberStats" class="member-stats"></span>
-                    <button onclick="loadMembers()" class="refresh-btn">🔄 刷新列表</button>
-                    <button onclick="adminLogout()" class="logout-btn">退出</button>
+        <!-- GitHub Token 配置 -->
+        <div class="config-panel" id="configPanel">
+            <h3>⚙️ GitHub 管理员配置</h3>
+            <div class="form-group">
+                <label for="githubToken">GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                <div class="helper-text">
+                    <strong>获取 Token 步骤：</strong><br>
+                    1. 访问 <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a><br>
+                    2. 点击 "Generate new token (classic)"<br>
+                    3. 选择权限：<code>repo</code><br>
+                    4. 复制 Token 并粘贴到此处
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveConfig()">保存并连接</button>
+        </div>
+        
+        <!-- 主管理界面 -->
+        <div id="mainInterface" style="display:none;">
+            <div class="status-bar">
+                <div class="status-info">
+                    <div class="status-item">
+                        <span class="status-label">仓库:</span>
+                        <span class="status-value" id="repoInfo">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">最后更新:</span>
+                        <span class="status-value" id="lastUpdate">-</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">会员总数:</span>
+                        <span class="status-value" id="totalCount">0</span>
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <button class="btn btn-primary" onclick="loadMembers()">🔄 刷新</button>
+                    <button class="btn btn-warning" onclick="exportMembers()">📥 导出</button>
                 </div>
             </div>
             
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>邮箱</th>
-                            <th>状态</th>
-                            <th>到期日期</th>
-                            <th>注册时间</th>
-                            <th>审核时间</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="memberTable">
-                        <tr><td colspan="7" style="text-align:center;">请登录后查看</td></tr>
-                    </tbody>
-                </table>
+            <div class="main-panel">
+                <div class="panel-header">
+                    <h3>➕ 添加新会员</h3>
+                </div>
+                
+                <div class="add-form">
+                    <div class="form-group">
+                        <label>电子邮箱</label>
+                        <input type="email" id="newEmail" placeholder="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select id="newStatus" style="width:100%; padding:10px; border:2px solid #e1e4e8; border-radius:8px; font-family:inherit; font-size:14px;">
+                            <option value="approved">已通过</option>
+                            <option value="pending">待审核</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>到期日期</label>
+                        <input type="date" id="newExpire">
+                    </div>
+                    <button class="btn btn-success" onclick="addMember()" style="height:45px;">添加</button>
+                </div>
+                
+                <div class="panel-header">
+                    <h3>📋 会员列表</h3>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>邮箱</th>
+                                <th>状态</th>
+                                <th>到期日期</th>
+                                <th>注册时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTable">
+                            <tr><td colspan="5" class="empty-row">加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </section>
+        </div>
     </div>
     
+    <!-- 确认弹窗 -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3 id="confirmTitle">确认操作</h3>
+            <p id="confirmMessage"></p>
+            <div class="modal-btns">
+                <button class="btn btn-secondary" onclick="closeConfirm()">取消</button>
+                <button class="btn btn-danger" id="confirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+    
     <script>
-        const API_URL = 'https://picfik.com/member_api.php';
-        let adminKey = '';
+        const GITHUB_REPO = 'picfik/picfik-py-pwa';
+        const MEMBERS_FILE = 'members.json';
+        const GITHUB_API = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + MEMBERS_FILE;
         
-        function adminLogin() {
-            adminKey = document.getElementById('adminKeyInput').value.trim();
-            if (!adminKey) {
-                alert('请输入管理员密钥');
-                return;
+        let githubToken = '';
+        let membersData = null;
+        let fileSha = null;
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedToken = localStorage.getItem('githubToken');
+            if (savedToken) {
+                githubToken = savedToken;
+                document.getElementById('githubToken').value = savedToken;
+                connectToGitHub();
             }
-            loadMembers();
+            
+            // 设置默认到期日期为一年后
+            const nextYear = new Date();
+            nextYear.setFullYear(nextYear.getFullYear() + 1);
+            document.getElementById('newExpire').value = nextYear.toISOString().split('T')[0];
+        });
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
         
-        function adminLogout() {
-            adminKey = '';
-            document.getElementById('adminLoginSection').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('adminKeyInput').value = '';
+        function saveConfig() {
+            const token = document.getElementById('githubToken').value.trim();
+            if (!token) {
+                showToast('请输入 GitHub Token', 'error');
+                return;
+            }
+            githubToken = token;
+            localStorage.setItem('githubToken', token);
+            connectToGitHub();
+        }
+        
+        function logout() {
+            localStorage.removeItem('githubToken');
+            githubToken = '';
+            document.getElementById('configPanel').style.display = 'block';
+            document.getElementById('mainInterface').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('githubToken').value = '';
+            showToast('已退出登录', 'info');
+        }
+        
+        async function connectToGitHub() {
+            try {
+                const response = await fetch(GITHUB_API, {
+                    headers: {
+                        'Authorization': 'token ' + githubToken,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.status === 404) {
+                    showToast('members.json 不存在，将自动创建', 'info');
+                    await createInitialMembersFile();
+                } else if (response.ok) {
+                    const data = await response.json();
+                    fileSha = data.sha;
+                    const content = JSON.parse(atob(data.content));
+                    membersData = content;
+                    
+                    document.getElementById('configPanel').style.display = 'none';
+                    document.getElementById('mainInterface').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    document.getElementById('repoInfo').textContent = GITHUB_REPO;
+                    
+                    renderMembers();
+                    showToast('连接成功', 'success');
+                } else {
+                    const errorData = await response.json();
+                    showToast('连接失败: ' + (errorData.message || response.status), 'error');
+                }
+            } catch (error) {
+                showToast('网络错误: ' + error.message, 'error');
+            }
+        }
+        
+        async function createInitialMembersFile() {
+            const initialData = {
+                last_updated: new Date().toISOString(),
+                members: []
+            };
+            
+            try {
+                await uploadToGitHub(initialData, '创建会员数据文件');
+                membersData = initialData;
+                
+                document.getElementById('configPanel').style.display = 'none';
+                document.getElementById('mainInterface').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('repoInfo').textContent = GITHUB_REPO;
+                
+                renderMembers();
+                showToast('members.json 已创建', 'success');
+            } catch (error) {
+                showToast('创建失败: ' + error.message, 'error');
+            }
         }
         
         async function loadMembers() {
             try {
-                const response = await fetch(API_URL + '?action=admin_list', {
-                    headers: { 'X-Admin-Key': adminKey }
+                const response = await fetch(GITHUB_API + '?ref=main', {
+                    headers: {
+                        'Authorization': 'token ' + githubToken,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
                 });
-                const data = await response.json();
                 
-                if (data.status === 'success') {
-                    document.getElementById('adminLoginSection').style.display = 'none';
-                    document.getElementById('adminPanel').style.display = 'block';
-                    renderMembers(data.members);
-                    
-                    const approved = data.members.filter(m => m.status === 'approved').length;
-                    const pending = data.members.filter(m => m.status === 'pending').length;
-                    const expired = data.members.filter(m => m.status === 'expired').length;
-                    document.getElementById('memberStats').textContent = 
-                        `会员: ${approved} | 待审: ${pending} | 过期: ${expired} | 总计: ${data.count}`;
+                if (response.ok) {
+                    const data = await response.json();
+                    fileSha = data.sha;
+                    membersData = JSON.parse(atob(data.content));
+                    renderMembers();
+                    showToast('数据已刷新', 'success');
                 } else {
-                    alert('登录失败: ' + data.message);
+                    showToast('加载失败', 'error');
                 }
             } catch (error) {
-                alert('请求失败: ' + error.message);
+                showToast('网络错误', 'error');
             }
         }
         
-        function renderMembers(members) {
+        function renderMembers() {
+            if (!membersData) return;
+            
             const tbody = document.getElementById('memberTable');
-            tbody.innerHTML = '';
+            const members = membersData.members || [];
+            
+            document.getElementById('lastUpdate').textContent = membersData.last_updated || '-';
+            document.getElementById('totalCount').textContent = members.length;
             
             if (members.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">暂无注册会员</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-row">暂无会员，请添加</td></tr>';
                 return;
             }
             
-            members.forEach(m => {
-                const row = document.createElement('tr');
-                const statusClass = getStatusClass(m.status);
+            // 按注册时间倒序
+            const sorted = [...members].sort((a, b) => 
+                (b.created_at || '').localeCompare(a.created_at || '')
+            );
+            
+            tbody.innerHTML = sorted.map(m => {
+                const statusClass = {
+                    'approved': 'status-approved',
+                    'pending': 'status-pending',
+                    'rejected': 'status-rejected',
+                    'expired': 'status-expired'
+                }[m.status] || 'status-pending';
                 
-                row.innerHTML = `
-                    <td>${m.id}</td>
-                    <td>${m.email}</td>
-                    <td><span class="status-badge ${statusClass}">${getStatusText(m.status)}</span></td>
-                    <td>
-                        <input type="date" id="expire_${m.id}" value="${m.expire_date || ''}" class="date-input">
-                    </td>
-                    <td>${m.created_at || '-'}</td>
-                    <td>${m.approved_at || '-'}</td>
-                    <td class="action-cell">
-                        <button onclick="updateMember(${m.id}, 'approved')" class="btn-approve">通过</button>
-                        <button onclick="updateMember(${m.id}, 'rejected')" class="btn-reject">拒绝</button>
-                        <button onclick="deleteMember(${m.id})" class="btn-delete">删除</button>
-                    </td>
+                const statusText = {
+                    'approved': '已通过',
+                    'pending': '待审核',
+                    'rejected': '已拒绝',
+                    'expired': '已过期'
+                }[m.status] || m.status;
+                
+                return `
+                    <tr>
+                        <td>${escapeHtml(m.email)}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <input type="date" class="date-input" value="${m.expire_date || ''}" 
+                                   onchange="updateExpireDate('${escapeHtml(m.email)}', this.value)">
+                        </td>
+                        <td>${m.created_at ? formatDate(m.created_at) : '-'}</td>
+                        <td class="action-btns">
+                            ${m.status !== 'approved' ? `<button class="btn btn-success" onclick="updateStatus('${escapeHtml(m.email)}', 'approved')">通过</button>` : ''}
+                            ${m.status === 'approved' ? `<button class="btn btn-warning" onclick="updateStatus('${escapeHtml(m.email)}', 'expired')">过期</button>` : ''}
+                            <button class="btn btn-danger" onclick="deleteMember('${escapeHtml(m.email)}')">删除</button>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(row);
+            }).join('');
+        }
+        
+        async function addMember() {
+            const email = document.getElementById('newEmail').value.trim();
+            const status = document.getElementById('newStatus').value;
+            const expireDate = document.getElementById('newExpire').value;
+            
+            if (!email || !isValidEmail(email)) {
+                showToast('请输入有效的电子邮箱', 'error');
+                return;
+            }
+            
+            if (!expireDate && status === 'approved') {
+                showToast('已通过的会员必须设置到期日期', 'error');
+                return;
+            }
+            
+            // 检查是否已存在
+            if (membersData.members.some(m => m.email === email)) {
+                showToast('该邮箱已存在', 'error');
+                return;
+            }
+            
+            const newMember = {
+                email: email,
+                status: status,
+                expire_date: expireDate || '',
+                created_at: new Date().toISOString()
+            };
+            
+            membersData.members.push(newMember);
+            
+            try {
+                await uploadToGitHub(membersData, `添加会员: ${email}`);
+                document.getElementById('newEmail').value = '';
+                renderMembers();
+                showToast('添加成功', 'success');
+            } catch (error) {
+                showToast('保存失败: ' + error.message, 'error');
+            }
+        }
+        
+        async function updateStatus(email, newStatus) {
+            const member = membersData.members.find(m => m.email === email);
+            if (!member) return;
+            
+            member.status = newStatus;
+            if (newStatus === 'approved' && !member.expire_date) {
+                const nextYear = new Date();
+                nextYear.setFullYear(nextYear.getFullYear() + 1);
+                member.expire_date = nextYear.toISOString().split('T')[0];
+            }
+            
+            try {
+                await uploadToGitHub(membersData, `更新会员状态: ${email} -> ${newStatus}`);
+                renderMembers();
+                showToast('更新成功', 'success');
+            } catch (error) {
+                showToast('保存失败', 'error');
+            }
+        }
+        
+        async function updateExpireDate(email, newDate) {
+            const member = membersData.members.find(m => m.email === email);
+            if (!member) return;
+            
+            member.expire_date = newDate;
+            
+            try {
+                await uploadToGitHub(membersData, `更新到期日期: ${email}`);
+                showToast('日期已更新', 'success');
+            } catch (error) {
+                showToast('保存失败', 'error');
+            }
+        }
+        
+        function deleteMember(email) {
+            showConfirm('删除确认', `确定删除会员 ${email}？此操作不可恢复。`, async () => {
+                membersData.members = membersData.members.filter(m => m.email !== email);
+                
+                try {
+                    await uploadToGitHub(membersData, `删除会员: ${email}`);
+                    renderMembers();
+                    showToast('删除成功', 'success');
+                } catch (error) {
+                    showToast('删除失败', 'error');
+                }
             });
         }
         
-        async function updateMember(id, status) {
-            const expireDate = document.getElementById('expire_' + id).value;
+        async function uploadToGitHub(data, message) {
+            content = JSON.stringify({
+                last_updated: new Date().toISOString(),
+                members: data.members
+            }, null, 2);
             
-            if (status === 'approved' && !expireDate) {
-                alert('请设置会员到期日期');
-                return;
-            }
+            const contentBase64 = btoa(unescape(encodeURIComponent(content)));
             
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Admin-Key': adminKey
-                    },
-                    body: JSON.stringify({
-                        action: 'admin_update',
-                        id: id,
-                        status: status,
-                        expire_date: expireDate
-                    })
-                });
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    alert('更新成功');
-                    loadMembers();
-                } else {
-                    alert('更新失败: ' + data.message);
-                }
-            } catch (error) {
-                alert('请求失败: ' + error.message);
-            }
-        }
-        
-        async function deleteMember(id) {
-            if (!confirm('确定删除此会员记录？')) return;
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Admin-Key': adminKey
-                    },
-                    body: JSON.stringify({
-                        action: 'admin_delete',
-                        id: id
-                    })
-                });
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    alert('删除成功');
-                    loadMembers();
-                } else {
-                    alert('删除失败: ' + data.message);
-                }
-            } catch (error) {
-                alert('请求失败: ' + error.message);
-            }
-        }
-        
-        function getStatusText(status) {
-            const map = {
-                'pending': '待审核',
-                'approved': '已通过',
-                'rejected': '已拒绝',
-                'expired': '已过期'
+            const payload = {
+                message: message,
+                content: contentBase64,
+                branch: 'main'
             };
-            return map[status] || status;
+            
+            if (fileSha) {
+                payload.sha = fileSha;
+            }
+            
+            const response = await fetch(GITHUB_API, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + githubToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(payload)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                fileSha = result.content?.sha || result.sha;
+                membersData = {
+                    last_updated: result.commit?.committer?.date || new Date().toISOString(),
+                    members: data.members
+                };
+            } else {
+                const error = await response.json();
+                throw new Error(error.message || '上传失败');
+            }
         }
         
-        function getStatusClass(status) {
-            const map = {
-                'pending': 'status-pending',
-                'approved': 'status-approved',
-                'rejected': 'status-rejected',
-                'expired': 'status-expired'
-            };
-            return map[status] || '';
+        function exportMembers() {
+            const dataStr = JSON.stringify(membersData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'members_export_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
         }
         
-        document.getElementById('adminKeyInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') adminLogin();
-        });
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmModal').classList.add('show');
+            
+            const confirmBtn = document.getElementById('confirmBtn');
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            newBtn.addEventListener('click', () => {
+                closeConfirm();
+                callback();
+            });
+        }
+        
+        function closeConfirm() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        
+        function formatDate(isoStr) {
+            try {
+                const date = new Date(isoStr);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return isoStr;
+            }
+        }
     </script>
 </body>
 </html>
