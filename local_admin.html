@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地会员管理 - 测试模式</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: 13px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        input[type="email"], input[type="date"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.85; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .member-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .member-list th, .member-list td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 13px;
+        }
+        .member-list th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-expired { background: #e2e3e5; color: #383d41; }
+        .action-btns button {
+            padding: 4px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            color: #0c5460;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 本地会员管理工具</h1>
+        <p class="subtitle">用于在 member_api.php 部署前进行本地测试</p>
+        
+        <div class="warning">
+            <strong>⚠️ 说明：</strong>此工具仅用于本地测试，数据保存在浏览器 localStorage 中。
+            部署 member_api.php 到 picfik.com 后，请使用正式的管理员后台 admin.html。
+        </div>
+        
+        <div class="info-box" id="infoBox">
+            选择下列操作来管理本地会员数据。
+        </div>
+        
+        <div class="section">
+            <h3>➕ 快速设置自己为会员</h3>
+            <div class="form-row">
+                <input type="email" id="emailInput" placeholder="输入您的电子邮箱">
+                <input type="date" id="expireInput">
+                <button class="btn-success" onclick="approveSelf()">设置为会员</button>
+            </div>
+            <p style="font-size: 12px; color: #666;">设置后，用此邮箱登录 PWA 即可访问</p>
+        </div>
+        
+        <div class="section">
+            <h3>📋 本地会员列表</h3>
+            <button class="btn-primary" onclick="loadMembers()" style="margin-bottom: 15px;">刷新列表</button>
+            <table class="member-list" id="memberTable">
+                <thead>
+                    <tr>
+                        <th>邮箱</th>
+                        <th>状态</th>
+                        <th>到期日期</th>
+                        <th>注册时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="memberBody">
+                    <tr><td colspan="5" class="empty">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h3>🧹 数据管理</h3>
+            <button class="btn-danger" onclick="clearAll()" style="margin-right: 10px;">清空所有本地数据</button>
+            <button class="btn-primary" onclick="exportData()">导出数据</button>
+        </div>
+    </div>
+    
+    <script>
+        function loadMembers() {
+            const members = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('member_')) {
+                    try {
+                        const member = JSON.parse(localStorage.getItem(key));
+                        members.push({
+                            key: key,
+                            ...member
+                        });
+                    } catch(e) {}
+                }
+            }
+            renderMembers(members);
+        }
+        
+        function renderMembers(members) {
+            const body = document.getElementById('memberBody');
+            body.innerHTML = '';
+            
+            if (members.length === 0) {
+                body.innerHTML = '<tr><td colspan="5" class="empty">暂无本地会员数据</td></tr>';
+                return;
+            }
+            
+            members.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+            
+            members.forEach(m => {
+                const tr = document.createElement('tr');
+                const statusClass = m.status === 'approved' ? 'status-approved' : 
+                                   m.status === 'expired' ? 'status-expired' : 'status-pending';
+                const statusText = { approved: '已通过', pending: '待审核', expired: '已过期', rejected: '已拒绝' }[m.status] || m.status;
+                
+                tr.innerHTML = `
+                    <td>${m.email}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${m.expire_date || '-'}</td>
+                    <td>${m.created_at ? new Date(m.created_at).toLocaleString('zh-CN') : '-'}</td>
+                    <td class="action-btns">
+                        <button class="btn-success" onclick="approveMember('${m.key}')">通过</button>
+                        <button class="btn-primary" onclick="updateExpire('${m.key}')">设置到期</button>
+                        <button class="btn-danger" onclick="deleteMember('${m.key}')">删除</button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+        
+        function approveSelf() {
+            const email = document.getElementById('emailInput').value.trim();
+            const expireDate = document.getElementById('expireInput').value;
+            
+            if (!email) {
+                alert('请输入电子邮箱');
+                return;
+            }
+            if (!expireDate) {
+                alert('请设置到期日期');
+                return;
+            }
+            
+            const memberData = {
+                email: email,
+                status: 'approved',
+                expire_date: expireDate,
+                created_at: new Date().toISOString()
+            };
+            
+            localStorage.setItem('member_' + email, JSON.stringify(memberData));
+            
+            document.getElementById('infoBox').innerHTML = 
+                `✅ 已设置 <strong>${email}</strong> 为会员，到期日期: ${expireDate}<br>现在可以用此邮箱登录 PWA 了。`;
+            
+            loadMembers();
+        }
+        
+        function approveMember(key) {
+            const data = JSON.parse(localStorage.getItem(key));
+            const email = data.email;
+            const expireDate = prompt('请输入到期日期 (格式: YYYY-MM-DD)', data.expire_date || '2027-12-31');
+            
+            if (!expireDate) return;
+            
+            data.status = 'approved';
+            data.expire_date = expireDate;
+            localStorage.setItem(key, JSON.stringify(data));
+            loadMembers();
+        }
+        
+        function updateExpire(key) {
+            const data = JSON.parse(localStorage.getItem(key));
+            const newDate = prompt('请输入新的到期日期 (格式: YYYY-MM-DD)', data.expire_date || '2027-12-31');
+            
+            if (!newDate) return;
+            
+            data.expire_date = newDate;
+            localStorage.setItem(key, JSON.stringify(data));
+            loadMembers();
+        }
+        
+        function deleteMember(key) {
+            if (!confirm('确定删除此会员？')) return;
+            localStorage.removeItem(key);
+            loadMembers();
+        }
+        
+        function clearAll() {
+            if (!confirm('确定清空所有本地会员数据？此操作不可恢复！')) return;
+            
+            const keysToDelete = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('member_')) {
+                    keysToDelete.push(key);
+                }
+            }
+            
+            keysToDelete.forEach(k => localStorage.removeItem(k));
+            loadMembers();
+            document.getElementById('infoBox').textContent = '已清空所有本地会员数据';
+        }
+        
+        function exportData() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('member_')) {
+                    data[key] = JSON.parse(localStorage.getItem(key));
+                }
+            }
+            
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'members_local_backup.json';
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+        
+        // 初始化时设置默认到期日期为一年后
+        const nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        document.getElementById('expireInput').value = nextYear.toISOString().split('T')[0];
+        
+        loadMembers();
+    </script>
+</body>
+</html>
