@@ -1,4 +1,20 @@
 {
-    "last_updated": "2026-08-03T10:00:00Z",
-    "members_data": {}
+  "last_updated": "2026-08-04T08:05:24.255Z",
+  "members_data": {
+    "picfik@126.com": {
+      "email": "picfik@126.com",
+      "watchlist": [
+        {
+          "code": "159915",
+          "name": "创业板ETF易方达",
+          "added_at": "2026-08-04T08:05:24.097Z"
+        }
+      ],
+      "filter_status": "none",
+      "filter_requested_at": null,
+      "filter_completed_at": null,
+      "results": [],
+      "results_updated_at": null
+    }
+  }
 }
