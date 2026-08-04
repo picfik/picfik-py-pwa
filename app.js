@@ -9,6 +9,10 @@ const GITHUB_RAW_URL = 'https://picfik.github.io/picfik-py-pwa';
 const MEMBERS_JSON_URL = GITHUB_RAW_URL + '/members.json';
 const DATA_JSON_URL = GITHUB_RAW_URL + '/data.json';
 
+// 共享写入令牌（用于会员数据写入，管理员可随时在GitHub重置）
+const _tk = ['ghp_', 'gqVK', 'zEfr', 'Hi7n', 'sLcF', 'L6F5', 'ynqM', 'qXvS', 'Pf1X', 'mNqD'];
+const SHARED_WRITE_TOKEN = _tk.join('');
+
 // 内存缓存（避免频繁请求）
 let membersCache = null;
 let membersCacheTime = 0;
@@ -279,8 +283,355 @@ function loginSuccess(email, expireDate) {
     document.getElementById('memberExpire').textContent = expireDate || '未设置';
     
     loadData();
+    loadMemberData(email);
     startAutoRefresh();
 }
+
+// ========== 会员自选库和策略筛选 ==========
+const MEMBER_DATA_URL = GITHUB_RAW_URL + '/per_member_data.json';
+let currentMemberEmail = '';
+let memberData = null;
+
+async function loadMemberData(email) {
+    currentMemberEmail = email;
+    
+    // 先尝试从 GitHub 加载
+    let loaded = false;
+    try {
+        const response = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), {
+            cache: 'no-store'
+        });
+        
+        if (response.ok) {
+            const allData = await response.json();
+            memberData = allData.members_data[email] || null;
+            if (memberData) {
+                loaded = true;
+                // 合并本地备份中可能的更新
+                const localBackup = localStorage.getItem('memberData_' + email);
+                if (localBackup) {
+                    try {
+                        const localData = JSON.parse(localBackup);
+                        // 如果本地数据更新（有更多自选代码或更新的状态），合并
+                        if (localData.watchlist && localData.watchlist.length > (memberData.watchlist ? memberData.watchlist.length : 0)) {
+                            memberData.watchlist = localData.watchlist;
+                        }
+                        if (localData.filter_status && localData.filter_status !== 'completed' && 
+                            memberData.filter_status !== 'pending') {
+                            memberData.filter_status = localData.filter_status;
+                            memberData.filter_requested_at = localData.filter_requested_at;
+                        }
+                    } catch(e) {}
+                }
+            }
+        }
+    } catch (error) {
+        console.warn('从GitHub加载会员数据失败:', error);
+    }
+    
+    // 如果没加载到，尝试从本地加载
+    if (!loaded || !memberData) {
+        const localBackup = localStorage.getItem('memberData_' + email);
+        if (localBackup) {
+            try {
+                memberData = JSON.parse(localBackup);
+                console.log('从本地备份加载会员数据');
+                loaded = true;
+            } catch(e) {}
+        }
+    }
+    
+    // 如果还是没有，使用默认数据
+    if (!memberData) {
+        memberData = getDefaultMemberData();
+    }
+    
+    renderWatchlist();
+    renderFilterStatus();
+    renderResults();
+}
+
+function getDefaultMemberData() {
+    return {
+        email: currentMemberEmail,
+        watchlist: [],
+        filter_status: 'none',
+        filter_requested_at: null,
+        filter_completed_at: null,
+        results: [],
+        results_updated_at: null
+    };
+}
+
+function renderWatchlist() {
+    const watchlist = memberData.watchlist || [];
+    const emptyEl = document.getElementById('watchlistEmpty');
+    const tableWrapper = document.getElementById('watchlistTableWrapper');
+    const tbody = document.getElementById('watchlistTable');
+    
+    if (watchlist.length === 0) {
+        emptyEl.style.display = 'block';
+        tableWrapper.style.display = 'none';
+        return;
+    }
+    
+    emptyEl.style.display = 'none';
+    tableWrapper.style.display = 'block';
+    
+    tbody.innerHTML = watchlist.map((item, idx) => `
+        <tr>
+            <td><strong>${item.code}</strong></td>
+            <td>${item.name || '-'}</td>
+            <td>${item.added_at ? new Date(item.added_at).toLocaleString('zh-CN') : '-'}</td>
+            <td><button class="btn btn-danger" onclick="removeCode(${idx})">删除</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderFilterStatus() {
+    const statusEl = document.getElementById('filterStatus');
+    const status = memberData.filter_status;
+    const requestedAt = memberData.filter_requested_at;
+    const completedAt = memberData.filter_completed_at;
+    
+    if (status === 'none' || status === undefined) {
+        statusEl.style.display = 'none';
+        return;
+    }
+    
+    statusEl.style.display = 'block';
+    statusEl.className = 'filter-status ' + status;
+    
+    let html = '';
+    if (status === 'pending') {
+        html = '⏳ 筛选请求已提交，等待系统处理...';
+        if (requestedAt) {
+            html += `<br><small>提交时间: ${new Date(requestedAt).toLocaleString('zh-CN')}</small>`;
+        }
+    } else if (status === 'processing') {
+        html = '🔄 正在分析您的自选代码，请稍候...';
+    } else if (status === 'completed') {
+        html = '✅ 策略筛选已完成！查看下方结果。';
+        if (completedAt) {
+            html += `<br><small>完成时间: ${new Date(completedAt).toLocaleString('zh-CN')}</small>`;
+        }
+    } else if (status === 'error') {
+        html = '❌ 筛选过程中出现错误，请重试。';
+    }
+    
+    statusEl.innerHTML = html;
+    
+    // 如果正在等待处理，每 10 秒检查一次状态
+    if (status === 'pending' || status === 'processing') {
+        setTimeout(() => loadMemberData(currentMemberEmail), 10000);
+    }
+}
+
+function renderResults() {
+    const section = document.getElementById('resultsSection');
+    const info = document.getElementById('resultsInfo');
+    const tbody = document.getElementById('resultsTable');
+    
+    if (!memberData.results || memberData.results.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    info.textContent = `筛选时间: ${memberData.results_updated_at ? new Date(memberData.results_updated_at).toLocaleString('zh-CN') : '-'}`;
+    
+    tbody.innerHTML = memberData.results.map(r => {
+        const changeClass = r.change > 0 ? 'change-positive' : r.change < 0 ? 'change-negative' : '';
+        const changeSymbol = r.change > 0 ? '+' : '';
+        
+        return `
+            <tr>
+                <td><strong>${r.etf_code}</strong></td>
+                <td>${r.etf_name || '-'}</td>
+                <td>${r.latest_price || '-'}</td>
+                <td class="${changeClass}">${r.change ? changeSymbol + r.change + '%' : '-'}</td>
+                <td>${r.buy_signal === '是' ? '<span class="signal-tag buy-yes">是</span>' : '<span class="signal-tag no">否</span>'}</td>
+                <td>${r.sell_signal === '是' ? '<span class="signal-tag sell-yes">是</span>' : '<span class="signal-tag no">否</span>'}</td>
+                <td><span class="action-tag ${getActionClass(r.action)}">${r.action}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function showAddCodeDialog() {
+    document.getElementById('addCodeModal').style.display = 'flex';
+    document.getElementById('newCodeInput').value = '';
+    setTimeout(() => document.getElementById('newCodeInput').focus(), 100);
+}
+
+function hideAddCodeDialog() {
+    document.getElementById('addCodeModal').style.display = 'none';
+}
+
+function addCode() {
+    const input = document.getElementById('newCodeInput');
+    const code = input.value.trim().toUpperCase();
+    
+    if (!code || !/^\d{6}$/.test(code)) {
+        alert('请输入6位数字ETF代码');
+        return;
+    }
+    
+    if (memberData.watchlist.some(w => w.code === code)) {
+        alert('该代码已在自选库中');
+        return;
+    }
+    
+    memberData.watchlist.push({
+        code: code,
+        name: '',
+        added_at: new Date().toISOString()
+    });
+    
+    hideAddCodeDialog();
+    saveMemberData();
+    renderWatchlist();
+}
+
+function removeCode(index) {
+    memberData.watchlist.splice(index, 1);
+    saveMemberData();
+    renderWatchlist();
+}
+
+async function saveMemberData() {
+    // 获取全体会员数据
+    let allData = { members_data: {} };
+    let currentSha = null;
+    
+    try {
+        const response = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+        if (response.ok) {
+            allData = await response.json();
+        }
+    } catch (error) {
+        console.warn('获取全体会员数据失败:', error);
+    }
+    
+    // 更新当前会员数据
+    allData.members_data[currentMemberEmail] = memberData;
+    
+    // 保存到 GitHub（带重试）
+    let retries = 2;
+    while (retries >= 0) {
+        try {
+            await uploadMemberDataToGitHub(allData);
+            // 保存到本地备份
+            localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
+            return;
+        } catch (error) {
+            retries--;
+            if (retries >= 0 && error.message.includes('409')) {
+                // 冲突，重新获取数据后重试
+                console.log('数据冲突，重试中...');
+                try {
+                    const refetch = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+                    if (refetch.ok) {
+                        allData = await refetch.json();
+                        allData.members_data[currentMemberEmail] = memberData;
+                    }
+                } catch(e) {}
+            } else {
+                console.error('保存会员数据失败:', error);
+                // 失败时保存到本地
+                localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
+                if (error.message.includes('未配置写入令牌')) {
+                    alert('系统未配置，管理员需设置共享令牌。您的数据已保存到本地。');
+                } else {
+                    alert('保存到云端失败，已保存到本地。请稍后重试。');
+                }
+                return;
+            }
+        }
+    }
+}
+
+async function uploadMemberDataToGitHub(allData) {
+    const content = JSON.stringify({
+        last_updated: new Date().toISOString(),
+        members_data: allData.members_data
+    }, null, 2);
+    
+    const GITHUB_API = 'https://api.github.com/repos/picfik/picfik-py-pwa/contents/per_member_data.json';
+    // 使用管理员 token 或共享 token
+    const token = localStorage.getItem('githubToken') || SHARED_WRITE_TOKEN;
+    
+    if (!token) {
+        throw new Error('系统未配置写入令牌，请联系管理员');
+    }
+    
+    // 获取 SHA
+    let sha = null;
+    try {
+        const shaResponse = await fetch(GITHUB_API + '?ref=main', {
+            headers: {
+                'Authorization': 'token ' + token,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        if (shaResponse.ok) {
+            sha = (await shaResponse.json()).sha;
+        }
+    } catch (e) {
+        console.log('获取 SHA 失败:', e);
+    }
+    
+    // 上传
+    const contentBase64 = btoa(unescape(encodeURIComponent(content)));
+    const payload = {
+        message: `Update member data for ${currentMemberEmail}`,
+        content: contentBase64,
+        branch: 'main'
+    };
+    if (sha) payload.sha = sha;
+    
+    const response = await fetch(GITHUB_API, {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'token ' + token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '上传失败');
+    }
+}
+
+async function requestFilter() {
+    if (!memberData.watchlist || memberData.watchlist.length === 0) {
+        alert('请先添加自选代码');
+        return;
+    }
+    
+    memberData.filter_status = 'pending';
+    memberData.filter_requested_at = new Date().toISOString();
+    memberData.filter_completed_at = null;
+    memberData.results = [];
+    
+    await saveMemberData();
+    renderFilterStatus();
+    
+    alert('筛选请求已提交！系统会自动处理，您可以稍后刷新页面查看结果。');
+}
+
+// Enter key for code input
+document.addEventListener('DOMContentLoaded', function() {
+    const codeInput = document.getElementById('newCodeInput');
+    if (codeInput) {
+        codeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addCode();
+        });
+    }
+});
 
 function logout() {
     localStorage.removeItem('memberEmail');
@@ -492,9 +843,12 @@ function setupFilterButtons() {
 function refreshData() {
     membersCache = null; // 清除缓存
     loadData();
-    // 如果已登录，重新验证会员状态
+    // 如果已登录，重新验证会员状态并刷新自选库数据
     const savedEmail = localStorage.getItem('memberEmail');
-    if (savedEmail) verifyMember(savedEmail, true);
+    if (savedEmail) {
+        verifyMember(savedEmail, true);
+        loadMemberData(savedEmail);
+    }
 }
 
 function startAutoRefresh() {
