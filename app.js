@@ -298,6 +298,36 @@ const MEMBER_DATA_URL = GITHUB_RAW_URL + '/per_member_data.json';
 let currentMemberEmail = '';
 let memberData = null;
 
+// 写入队列：确保写入操作串行化，避免并发冲突
+let writeQueue = [];
+let isWriting = false;
+
+function queueWrite(writeFn) {
+    return new Promise((resolve, reject) => {
+        writeQueue.push({ fn: writeFn, resolve, reject });
+        processQueue();
+    });
+}
+
+async function processQueue() {
+    if (isWriting) return;
+    isWriting = true;
+    
+    try {
+        while (writeQueue.length > 0) {
+            const { fn, resolve, reject } = writeQueue.shift();
+            try {
+                const result = await fn();
+                resolve(result);
+            } catch (err) {
+                reject(err);
+            }
+        }
+    } finally {
+        isWriting = false;
+    }
+}
+
 async function loadMemberData(email) {
     currentMemberEmail = email;
     
@@ -506,54 +536,62 @@ function removeCode(index) {
 }
 
 async function saveMemberData() {
-    // 保存前先获取最新数据（避免冲突）
-    let allData = { members_data: {} };
-    
-    const fetchLatest = async () => {
-        const response = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-        if (response.ok) {
-            return await response.json();
-        }
-        return { members_data: {} };
-    };
-    
-    // 重试机制：最多3次
-    for (let attempt = 0; attempt < 3; attempt++) {
-        try {
-            // 每次重试都获取最新数据
-            allData = await fetchLatest();
-            
-            // 合并当前会员数据（只更新自己的，保留其他会员的）
-            allData.members_data[currentMemberEmail] = memberData;
-            
-            // 上传
-            await uploadMemberDataToGitHub(allData);
-            
-            // 保存到本地备份
-            localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
-            return; // 成功，退出
-        } catch (error) {
-            console.warn(`保存尝试 ${attempt + 1} 失败:`, error.message);
-            
-            // 如果是409冲突，继续重试
-            if (error.message.includes('409') && attempt < 2) {
-                console.log('数据冲突，重新获取后重试...');
-                await new Promise(resolve => setTimeout(resolve, 500)); // 短暂延迟
-                continue;
+    // 使用写入队列确保串行化
+    return queueWrite(async () => {
+        // 保存前先获取最新数据（避免冲突）
+        let allData = { members_data: {} };
+        
+        const fetchLatest = async () => {
+            const response = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+            if (response.ok) {
+                return await response.json();
             }
-            
-            // 其他错误或重试次数用完
-            console.error('保存会员数据失败:', error);
-            localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
-            
-            if (error.message.includes('未配置写入令牌')) {
-                alert('系统未配置，管理员需设置共享令牌。您的数据已保存到本地。');
-            } else if (attempt === 2) {
-                alert('保存到云端失败（已重试3次），已保存到本地。请稍后重试。');
+            return { members_data: {} };
+        };
+        
+        // 重试机制：最多3次
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                // 每次重试都获取最新数据
+                allData = await fetchLatest();
+                
+                // 合并当前会员数据（只更新自己的，保留其他会员的）
+                allData.members_data[currentMemberEmail] = memberData;
+                
+                // 上传
+                await uploadMemberDataToGitHub(allData);
+                
+                // 保存到本地备份
+                localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
+                console.log(`✓ 保存成功: ${currentMemberEmail}`);
+                return; // 成功，退出
+            } catch (error) {
+                console.warn(`保存尝试 ${attempt + 1} 失败:`, error.message);
+                
+                // 检测是否为冲突错误（409或包含conflict/merge关键字）
+                const isConflict = error.message.includes('409') || 
+                                  error.message.toLowerCase().includes('conflict') ||
+                                  error.message.toLowerCase().includes('merge');
+                
+                if (isConflict && attempt < 2) {
+                    console.log('数据冲突，等待后重试...');
+                    await new Promise(resolve => setTimeout(resolve, 800)); // 延长延迟
+                    continue;
+                }
+                
+                // 其他错误或重试次数用完
+                console.error('保存会员数据失败:', error);
+                localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
+                
+                if (error.message.includes('未配置写入令牌')) {
+                    alert('系统未配置，管理员需设置共享令牌。您的数据已保存到本地。');
+                } else if (attempt === 2) {
+                    alert('保存到云端失败（已重试3次），已保存到本地。请稍后重试。');
+                }
+                return;
             }
-            return;
         }
-    }
+    });
 }
 
 async function uploadMemberDataToGitHub(allData) {
@@ -581,15 +619,24 @@ async function uploadMemberDataToGitHub(allData) {
         });
         if (shaResponse.ok) {
             sha = (await shaResponse.json()).sha;
+        } else if (shaResponse.status === 401) {
+            throw new Error('写入令牌无效（401 Unauthorized）');
+        } else if (shaResponse.status === 404) {
+            console.log('文件不存在，将创建新文件');
+        } else {
+            throw new Error(`获取文件信息失败（${shaResponse.status}）`);
         }
     } catch (e) {
-        console.log('获取 SHA 失败:', e);
+        if (e.message.includes('401') || e.message.includes('获取文件信息失败')) {
+            throw e;
+        }
+        console.log('获取 SHA 失败，尝试创建新文件:', e.message);
     }
     
     // 上传
     const contentBase64 = btoa(unescape(encodeURIComponent(content)));
     const payload = {
-        message: `Update member data for ${currentMemberEmail}`,
+        message: `Update member data for ${currentMemberEmail} at ${new Date().toISOString()}`,
         content: contentBase64,
         branch: 'main'
     };
@@ -606,9 +653,17 @@ async function uploadMemberDataToGitHub(allData) {
     });
     
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '上传失败');
+        let errorMsg = `上传失败（HTTP ${response.status}）`;
+        try {
+            const errorData = await response.json();
+            if (errorData.message) {
+                errorMsg = `${errorData.message} (HTTP ${response.status})`;
+            }
+        } catch(e) {}
+        throw new Error(errorMsg);
     }
+    
+    console.log(`✓ 数据上传成功（${Object.keys(allData.members_data).length} 个会员）`);
 }
 
 async function requestFilter() {
