@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T15:08:57.943207",
+  "last_updated": "2026-08-04T15:09:03.293668",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -20,11 +20,48 @@
           "added_at": "2026-08-04T06:55:29.731Z"
         }
       ],
-      "filter_status": "processing",
+      "filter_status": "completed",
       "filter_requested_at": "2026-08-04T07:08:42.590Z",
-      "filter_completed_at": null,
-      "results": [],
-      "results_updated_at": "2026-08-04T14:48:46.009198"
+      "filter_completed_at": "2026-08-04T15:09:03.293525",
+      "results": [
+        {
+          "etf_code": "159916",
+          "etf_name": "",
+          "latest_price": 5.129,
+          "change": -0.5,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "否",
+          "sell_reason": "不满足卖出条件",
+          "action": "观望",
+          "suggestion": "观望"
+        },
+        {
+          "etf_code": "513180",
+          "etf_name": "",
+          "latest_price": 0.617,
+          "change": 0.33,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "否",
+          "sell_reason": "不满足卖出条件",
+          "action": "观望",
+          "suggestion": "观望"
+        },
+        {
+          "etf_code": "159766",
+          "etf_name": "",
+          "latest_price": 0.574,
+          "change": -1.2,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "否",
+          "sell_reason": "不满足卖出条件",
+          "action": "观望",
+          "suggestion": "观望"
+        }
+      ],
+      "results_updated_at": "2026-08-04T15:09:03.293530"
     }
   }
 }
