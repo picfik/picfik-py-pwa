@@ -435,6 +435,16 @@
             showToast('已退出登录', 'info');
         }
         
+        // Base64 编码（支持中文）
+        function encodeBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+        
+        // Base64 解码（支持中文）
+        function decodeBase64(b64) {
+            return decodeURIComponent(escape(atob(b64)));
+        }
+        
         async function connectToGitHub() {
             try {
                 const response = await fetch(GITHUB_API, {
@@ -450,7 +460,7 @@
                 } else if (response.ok) {
                     const data = await response.json();
                     fileSha = data.sha;
-                    const content = JSON.parse(atob(data.content));
+                    const content = JSON.parse(decodeBase64(data.content));
                     membersData = content;
                     
                     document.getElementById('configPanel').style.display = 'none';
@@ -503,14 +513,14 @@
                 if (response.ok) {
                     const data = await response.json();
                     fileSha = data.sha;
-                    membersData = JSON.parse(atob(data.content));
+                    membersData = JSON.parse(decodeBase64(data.content));
                     renderMembers();
                     showToast('数据已刷新', 'success');
                 } else {
-                    showToast('加载失败', 'error');
+                    showToast('加载失败: ' + response.status, 'error');
                 }
             } catch (error) {
-                showToast('网络错误', 'error');
+                showToast('网络错误: ' + error.message, 'error');
             }
         }
         
@@ -582,86 +592,108 @@
                 return;
             }
             
-            // 检查是否已存在
-            if (membersData.members.some(m => m.email === email)) {
-                showToast('该邮箱已存在', 'error');
-                return;
-            }
-            
-            const newMember = {
-                email: email,
-                status: status,
-                expire_date: expireDate || '',
-                created_at: new Date().toISOString()
-            };
-            
-            membersData.members.push(newMember);
-            
             try {
+                // 先从服务器获取最新数据
+                await refreshSha();
+                
+                // 检查是否已存在
+                if (membersData.members.some(m => m.email === email)) {
+                    showToast('该邮箱已存在', 'error');
+                    return;
+                }
+                
+                const newMember = {
+                    email: email,
+                    status: status,
+                    expire_date: expireDate || '',
+                    created_at: new Date().toISOString()
+                };
+                
+                membersData.members.push(newMember);
+                
                 await uploadToGitHub(membersData, `添加会员: ${email}`);
                 document.getElementById('newEmail').value = '';
                 renderMembers();
                 showToast('添加成功', 'success');
             } catch (error) {
                 showToast('保存失败: ' + error.message, 'error');
+                renderMembers(); // 恢复显示
             }
         }
         
         async function updateStatus(email, newStatus) {
-            const member = membersData.members.find(m => m.email === email);
-            if (!member) return;
-            
-            member.status = newStatus;
-            if (newStatus === 'approved' && !member.expire_date) {
-                const nextYear = new Date();
-                nextYear.setFullYear(nextYear.getFullYear() + 1);
-                member.expire_date = nextYear.toISOString().split('T')[0];
-            }
-            
             try {
+                // 先从服务器获取最新数据
+                await refreshSha();
+                
+                const member = membersData.members.find(m => m.email === email);
+                if (!member) {
+                    showToast('未找到该会员', 'error');
+                    return;
+                }
+                
+                member.status = newStatus;
+                if (newStatus === 'approved' && !member.expire_date) {
+                    const nextYear = new Date();
+                    nextYear.setFullYear(nextYear.getFullYear() + 1);
+                    member.expire_date = nextYear.toISOString().split('T')[0];
+                }
+                
                 await uploadToGitHub(membersData, `更新会员状态: ${email} -> ${newStatus}`);
                 renderMembers();
                 showToast('更新成功', 'success');
             } catch (error) {
-                showToast('保存失败', 'error');
+                showToast('保存失败: ' + error.message, 'error');
+                renderMembers();
             }
         }
         
         async function updateExpireDate(email, newDate) {
-            const member = membersData.members.find(m => m.email === email);
-            if (!member) return;
-            
-            member.expire_date = newDate;
-            
             try {
+                // 先从服务器获取最新数据
+                await refreshSha();
+                
+                const member = membersData.members.find(m => m.email === email);
+                if (!member) {
+                    showToast('未找到该会员', 'error');
+                    return;
+                }
+                
+                member.expire_date = newDate;
+                
                 await uploadToGitHub(membersData, `更新到期日期: ${email}`);
                 showToast('日期已更新', 'success');
             } catch (error) {
-                showToast('保存失败', 'error');
+                showToast('保存失败: ' + error.message, 'error');
+                renderMembers();
             }
         }
         
         function deleteMember(email) {
             showConfirm('删除确认', `确定删除会员 ${email}？此操作不可恢复。`, async () => {
-                membersData.members = membersData.members.filter(m => m.email !== email);
-                
                 try {
+                    // 先从服务器获取最新数据
+                    await refreshSha();
+                    
+                    membersData.members = membersData.members.filter(m => m.email !== email);
+                    
                     await uploadToGitHub(membersData, `删除会员: ${email}`);
                     renderMembers();
                     showToast('删除成功', 'success');
                 } catch (error) {
-                    showToast('删除失败', 'error');
+                    showToast('删除失败: ' + error.message, 'error');
+                    renderMembers();
                 }
             });
         }
         
         async function uploadToGitHub(data, message) {
-            content = JSON.stringify({
+            const content = JSON.stringify({
                 last_updated: new Date().toISOString(),
                 members: data.members
             }, null, 2);
             
-            const contentBase64 = btoa(unescape(encodeURIComponent(content)));
+            const contentBase64 = encodeBase64(content);
             
             const payload = {
                 message: message,
@@ -685,14 +717,49 @@
             
             if (response.ok) {
                 const result = await response.json();
-                fileSha = result.content?.sha || result.sha;
+                // 更新 SHA，用于下次更新
+                fileSha = result.content?.sha || result.sha || fileSha;
+                // 更新本地数据
                 membersData = {
-                    last_updated: result.commit?.committer?.date || new Date().toISOString(),
+                    last_updated: new Date().toISOString(),
                     members: data.members
                 };
             } else {
-                const error = await response.json();
-                throw new Error(error.message || '上传失败');
+                let errorMsg = '上传失败 (HTTP ' + response.status + ')';
+                try {
+                    const error = await response.json();
+                    errorMsg = error.message || errorMsg;
+                    
+                    // 409 冲突：SHA 过期，自动重新获取并重试一次
+                    if (response.status === 409 && !data._retried) {
+                        showToast('数据同步中，正在重试...', 'info');
+                        await refreshSha();
+                        data._retried = true;
+                        return await uploadToGitHub(data, message);
+                    }
+                } catch (e) {
+                    // JSON 解析失败
+                }
+                throw new Error(errorMsg);
+            }
+        }
+        
+        // 重新获取文件 SHA（解决冲突）
+        async function refreshSha() {
+            try {
+                const response = await fetch(GITHUB_API + '?ref=main', {
+                    headers: {
+                        'Authorization': 'token ' + githubToken,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    fileSha = data.sha;
+                    membersData = JSON.parse(decodeBase64(data.content));
+                }
+            } catch (e) {
+                console.error('刷新 SHA 失败:', e);
             }
         }
         
