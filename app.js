@@ -13,10 +13,16 @@ const DATA_JSON_URL = GITHUB_RAW_URL + '/data.json';
 const _tk = ['ghp_', 'gqVK', 'zEfr', 'Hi7n', 'sLcF', 'L6F5', 'ynqM', 'qXvS', 'Pf1X', 'mNqD'];
 const SHARED_WRITE_TOKEN = _tk.join('');
 
-// 内存缓存（避免频繁请求）
+// 内存缓存（页面加载时立即清除，确保获取最新）
 let membersCache = null;
 let membersCacheTime = 0;
 const MEMBERS_CACHE_DURATION = 30000; // 30秒缓存
+
+// 页面加载时立即清除所有缓存数据，确保F5后获取最新
+window.addEventListener('load', function() {
+    membersCache = null;
+    tradingData = null;
+});
 
 // ========== 会员认证逻辑 ==========
 
