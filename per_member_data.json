@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T16:30:32.394501",
+  "last_updated": "2026-08-04T08:31:38.147Z",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -10,8 +10,8 @@
           "added_at": "2026-08-04T08:06:52.769Z"
         }
       ],
-      "filter_status": "processing",
-      "filter_requested_at": "2026-08-04T08:30:28.518Z",
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T08:31:37.998Z",
       "filter_completed_at": null,
       "results": [],
       "results_updated_at": null
