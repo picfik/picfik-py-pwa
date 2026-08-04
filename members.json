@@ -1,17 +1,11 @@
 {
-  "last_updated": "2026-08-04T01:06:48.901Z",
-  "members": [
-    {
-      "email": "picfik@126.com",
-      "status": "approved",
-      "expire_date": "2027-12-31",
-      "created_at": "2026-08-03T10:00:00Z"
-    },
-    {
-      "email": "linchuwz@126.com",
-      "status": "approved",
-      "expire_date": "2027-08-29",
-      "created_at": "2026-08-04T01:05:48.685Z"
-    }
-  ]
+    "last_updated": "2026-08-03T10:00:00Z",
+    "members": [
+        {
+            "email": "picfik@126.com",
+            "status": "approved",
+            "expire_date": "2027-12-31",
+            "created_at": "2026-08-03T10:00:00Z"
+        }
+    ]
 }
