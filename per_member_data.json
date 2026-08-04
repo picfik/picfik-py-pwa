@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T08:05:24.255Z",
+  "last_updated": "2026-08-04T08:05:28.008Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -10,8 +10,8 @@
           "added_at": "2026-08-04T08:05:24.097Z"
         }
       ],
-      "filter_status": "none",
-      "filter_requested_at": null,
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T08:05:26.855Z",
       "filter_completed_at": null,
       "results": [],
       "results_updated_at": null
