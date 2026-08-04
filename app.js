@@ -433,8 +433,8 @@ function renderTable(signals) {
             '<td>' + (signal.etf_name || '-') + '</td>' +
             '<td>' + (signal.latest_price || '-') + '</td>' +
             '<td class="' + changeClass + '">' + (signal.change ? changeSymbol + signal.change + '%' : '-') + '</td>' +
-            '<td>' + (signal.buy_signal === '是' ? '<span class="signal-tag yes">是</span>' : '<span class="signal-tag no">否</span>') + '</td>' +
-            '<td>' + (signal.sell_signal === '是' ? '<span class="signal-tag yes">是</span>' : '<span class="signal-tag no">否</span>') + '</td>' +
+            '<td>' + (signal.buy_signal === '是' ? '<span class="signal-tag buy-yes">是</span>' : '<span class="signal-tag no">否</span>') + '</td>' +
+            '<td>' + (signal.sell_signal === '是' ? '<span class="signal-tag sell-yes">是</span>' : '<span class="signal-tag no">否</span>') + '</td>' +
             '<td><span class="action-tag ' + getActionClass(signal.action) + '">' + signal.action + '</span></td>' +
             '<td>' + (signal.has_position === '是' ? '✅' : '❌') + '</td>';
         
