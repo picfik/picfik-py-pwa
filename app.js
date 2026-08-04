@@ -506,53 +506,52 @@ function removeCode(index) {
 }
 
 async function saveMemberData() {
-    // 获取全体会员数据
+    // 保存前先获取最新数据（避免冲突）
     let allData = { members_data: {} };
-    let currentSha = null;
     
-    try {
+    const fetchLatest = async () => {
         const response = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
         if (response.ok) {
-            allData = await response.json();
+            return await response.json();
         }
-    } catch (error) {
-        console.warn('获取全体会员数据失败:', error);
-    }
+        return { members_data: {} };
+    };
     
-    // 更新当前会员数据
-    allData.members_data[currentMemberEmail] = memberData;
-    
-    // 保存到 GitHub（带重试）
-    let retries = 2;
-    while (retries >= 0) {
+    // 重试机制：最多3次
+    for (let attempt = 0; attempt < 3; attempt++) {
         try {
+            // 每次重试都获取最新数据
+            allData = await fetchLatest();
+            
+            // 合并当前会员数据（只更新自己的，保留其他会员的）
+            allData.members_data[currentMemberEmail] = memberData;
+            
+            // 上传
             await uploadMemberDataToGitHub(allData);
+            
             // 保存到本地备份
             localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
-            return;
+            return; // 成功，退出
         } catch (error) {
-            retries--;
-            if (retries >= 0 && error.message.includes('409')) {
-                // 冲突，重新获取数据后重试
-                console.log('数据冲突，重试中...');
-                try {
-                    const refetch = await fetch(MEMBER_DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-                    if (refetch.ok) {
-                        allData = await refetch.json();
-                        allData.members_data[currentMemberEmail] = memberData;
-                    }
-                } catch(e) {}
-            } else {
-                console.error('保存会员数据失败:', error);
-                // 失败时保存到本地
-                localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
-                if (error.message.includes('未配置写入令牌')) {
-                    alert('系统未配置，管理员需设置共享令牌。您的数据已保存到本地。');
-                } else {
-                    alert('保存到云端失败，已保存到本地。请稍后重试。');
-                }
-                return;
+            console.warn(`保存尝试 ${attempt + 1} 失败:`, error.message);
+            
+            // 如果是409冲突，继续重试
+            if (error.message.includes('409') && attempt < 2) {
+                console.log('数据冲突，重新获取后重试...');
+                await new Promise(resolve => setTimeout(resolve, 500)); // 短暂延迟
+                continue;
             }
+            
+            // 其他错误或重试次数用完
+            console.error('保存会员数据失败:', error);
+            localStorage.setItem('memberData_' + currentMemberEmail, JSON.stringify(memberData));
+            
+            if (error.message.includes('未配置写入令牌')) {
+                alert('系统未配置，管理员需设置共享令牌。您的数据已保存到本地。');
+            } else if (attempt === 2) {
+                alert('保存到云端失败（已重试3次），已保存到本地。请稍后重试。');
+            }
+            return;
         }
     }
 }
