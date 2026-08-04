@@ -619,6 +619,16 @@ tbody tr:nth-child(even):hover {
 }
 
 .signal-tag.yes {
+    background-color: #fde8e8;
+    color: var(--danger-color);
+}
+
+.signal-tag.buy-yes {
+    background-color: #fde8e8;
+    color: var(--danger-color);
+}
+
+.signal-tag.sell-yes {
     background-color: #e8f5e9;
     color: var(--success-color);
 }
@@ -637,12 +647,12 @@ tbody tr:nth-child(even):hover {
 }
 
 .action-tag.buy {
-    background-color: var(--success-color);
+    background-color: var(--danger-color);
     color: white;
 }
 
 .action-tag.sell {
-    background-color: var(--danger-color);
+    background-color: var(--success-color);
     color: white;
 }
 
@@ -657,12 +667,12 @@ tbody tr:nth-child(even):hover {
 }
 
 .change-positive {
-    color: var(--success-color);
+    color: var(--danger-color);
     font-weight: 600;
 }
 
 .change-negative {
-    color: var(--danger-color);
+    color: var(--success-color);
     font-weight: 600;
 }
 
