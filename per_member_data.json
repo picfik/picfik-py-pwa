@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T07:12:37.860Z",
+  "last_updated": "2026-08-04T07:13:05.092Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -18,9 +18,14 @@
           "code": "159766",
           "name": "",
           "added_at": "2026-08-04T06:55:29.731Z"
+        },
+        {
+          "code": "512690",
+          "name": "",
+          "added_at": "2026-08-04T07:13:05.014Z"
         }
       ],
-      "filter_status": "completed",
+      "filter_status": "pending",
       "filter_requested_at": "2026-08-04T07:08:42.590Z",
       "filter_completed_at": "2026-08-04T15:09:03.293525",
       "results": [
@@ -62,36 +67,6 @@
         }
       ],
       "results_updated_at": "2026-08-04T15:09:03.293530"
-    },
-    "linchuwz@126.com": {
-      "email": "linchuwz@126.com",
-      "watchlist": [
-        {
-          "code": "513880",
-          "name": "",
-          "added_at": "2026-08-04T07:11:53.399Z"
-        },
-        {
-          "code": "159735",
-          "name": "",
-          "added_at": "2026-08-04T07:12:25.458Z"
-        },
-        {
-          "code": "513920",
-          "name": "",
-          "added_at": "2026-08-04T07:12:32.187Z"
-        },
-        {
-          "code": "517900",
-          "name": "",
-          "added_at": "2026-08-04T07:12:37.797Z"
-        }
-      ],
-      "filter_status": "none",
-      "filter_requested_at": null,
-      "filter_completed_at": null,
-      "results": [],
-      "results_updated_at": null
     }
   }
 }
