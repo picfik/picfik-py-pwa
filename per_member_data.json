@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T14:48:46.009331",
+  "last_updated": "2026-08-04T06:55:32.531Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -13,37 +13,17 @@
           "code": "513180",
           "name": "",
           "added_at": "2026-08-04T06:47:11.138Z"
-        }
-      ],
-      "filter_status": "completed",
-      "filter_requested_at": "2026-08-04T06:46:12.088Z",
-      "filter_completed_at": "2026-08-04T14:48:46.009193",
-      "results": [
-        {
-          "etf_code": "159916",
-          "etf_name": "",
-          "latest_price": 5.123,
-          "change": -0.62,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
         },
         {
-          "etf_code": "513180",
-          "etf_name": "",
-          "latest_price": 0.615,
-          "change": 0.0,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
+          "code": "159766",
+          "name": "",
+          "added_at": "2026-08-04T06:55:29.731Z"
         }
       ],
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T06:55:32.353Z",
+      "filter_completed_at": null,
+      "results": [],
       "results_updated_at": "2026-08-04T14:48:46.009198"
     }
   }
