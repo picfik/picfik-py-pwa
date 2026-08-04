@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T15:16:50.543048",
+  "last_updated": "2026-08-04T07:17:25.901Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -25,139 +25,11 @@
           "added_at": "2026-08-04T07:13:05.014Z"
         }
       ],
-      "filter_status": "completed",
-      "filter_requested_at": "2026-08-04T07:13:07.734Z",
-      "filter_completed_at": "2026-08-04T15:13:43.111505",
-      "results": [
-        {
-          "etf_code": "159916",
-          "etf_name": "",
-          "latest_price": 5.129,
-          "change": -0.5,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        },
-        {
-          "etf_code": "513180",
-          "etf_name": "",
-          "latest_price": 0.617,
-          "change": 0.33,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        },
-        {
-          "etf_code": "159766",
-          "etf_name": "",
-          "latest_price": 0.574,
-          "change": -1.2,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        },
-        {
-          "etf_code": "512690",
-          "etf_name": "",
-          "latest_price": 0.441,
-          "change": -1.56,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        }
-      ],
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T07:17:24.213Z",
+      "filter_completed_at": null,
+      "results": [],
       "results_updated_at": "2026-08-04T15:13:43.111511"
-    },
-    "linchuwz@126.com": {
-      "email": "linchuwz@126.com",
-      "watchlist": [
-        {
-          "code": "513880",
-          "name": "",
-          "added_at": "2026-08-04T07:11:53.399Z"
-        },
-        {
-          "code": "159735",
-          "name": "",
-          "added_at": "2026-08-04T07:12:25.458Z"
-        },
-        {
-          "code": "513920",
-          "name": "",
-          "added_at": "2026-08-04T07:12:32.187Z"
-        },
-        {
-          "code": "517900",
-          "name": "",
-          "added_at": "2026-08-04T07:12:37.797Z"
-        }
-      ],
-      "filter_status": "completed",
-      "filter_requested_at": "2026-08-04T07:15:57.334Z",
-      "filter_completed_at": "2026-08-04T15:16:50.542901",
-      "results": [
-        {
-          "etf_code": "513880",
-          "etf_name": "",
-          "latest_price": 2.077,
-          "change": 1.17,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        },
-        {
-          "etf_code": "159735",
-          "etf_name": "",
-          "latest_price": 0.686,
-          "change": -1.29,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        },
-        {
-          "etf_code": "513920",
-          "etf_name": "",
-          "latest_price": 1.553,
-          "change": -1.58,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "是",
-          "sell_reason": "非PPP状态，满足卖出条件",
-          "action": "清仓",
-          "suggestion": "可清仓"
-        },
-        {
-          "etf_code": "517900",
-          "etf_name": "",
-          "latest_price": 1.525,
-          "change": -2.06,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "是",
-          "sell_reason": "非PPP状态，满足卖出条件",
-          "action": "清仓",
-          "suggestion": "可清仓"
-        }
-      ],
-      "results_updated_at": "2026-08-04T15:16:50.542907"
     }
   }
 }
