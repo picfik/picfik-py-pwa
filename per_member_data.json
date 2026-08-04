@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T07:34:44.946Z",
+  "last_updated": "2026-08-04T07:35:04.495Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -56,10 +56,25 @@
         }
       ],
       "filter_status": "pending",
-      "filter_requested_at": "2026-08-04T07:34:44.883Z",
+      "filter_requested_at": "2026-08-04T07:26:50.757Z",
       "filter_completed_at": null,
       "results": [],
       "results_updated_at": "2026-08-04T15:25:09.520374"
+    },
+    "linchuwz@hotmail.com": {
+      "email": "linchuwz@hotmail.com",
+      "watchlist": [
+        {
+          "code": "159915",
+          "name": "",
+          "added_at": "2026-08-04T07:35:04.357Z"
+        }
+      ],
+      "filter_status": "none",
+      "filter_requested_at": null,
+      "filter_completed_at": null,
+      "results": [],
+      "results_updated_at": null
     }
   }
 }
