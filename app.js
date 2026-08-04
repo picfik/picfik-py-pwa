@@ -382,6 +382,9 @@ async function loadMemberData(email) {
         memberData = getDefaultMemberData();
     }
     
+    // 预加载 ETF 名称映射
+    loadEtfNameMapping();
+    
     renderWatchlist();
     renderFilterStatus();
     renderResults();
@@ -414,10 +417,27 @@ function renderWatchlist() {
     emptyEl.style.display = 'none';
     tableWrapper.style.display = 'block';
     
+    // 尝试为没有名称的代码自动获取名称
+    let namesUpdated = false;
+    if (etfNameMapping) {
+        watchlist.forEach(item => {
+            if (!item.name || item.name === '-') {
+                const mappedName = getEtfName(item.code);
+                if (mappedName) {
+                    item.name = mappedName;
+                    namesUpdated = true;
+                }
+            }
+        });
+        if (namesUpdated) {
+            saveMemberData();
+        }
+    }
+    
     tbody.innerHTML = watchlist.map((item, idx) => `
         <tr>
             <td><strong>${item.code}</strong></td>
-            <td>${item.name || '-'}</td>
+            <td>${item.name || '<span style="color:#999">(自动获取中)</span>'}</td>
             <td>${item.added_at ? new Date(item.added_at).toLocaleString('zh-CN') : '-'}</td>
             <td><button class="btn btn-danger" onclick="removeCode(${idx})">删除</button></td>
         </tr>
@@ -504,7 +524,47 @@ function hideAddCodeDialog() {
     document.getElementById('addCodeModal').style.display = 'none';
 }
 
-function addCode() {
+// ETF 名称映射缓存
+let etfNameMapping = null;
+let etfNameMappingLoaded = false;
+
+async function loadEtfNameMapping() {
+    if (etfNameMappingLoaded && etfNameMapping) {
+        return etfNameMapping;
+    }
+    
+    try {
+        const response = await fetch(GITHUB_RAW_URL + '/etf_names.json?t=' + Date.now(), {
+            cache: 'no-store'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            etfNameMapping = data.etf_names || {};
+            etfNameMappingLoaded = true;
+            console.log('ETF 名称映射加载成功:', Object.keys(etfNameMapping).length, '个');
+        } else {
+            console.log('ETF 名称映射文件不存在，稍后将自动生成');
+            etfNameMapping = {};
+            etfNameMappingLoaded = true;
+        }
+    } catch (e) {
+        console.log('加载 ETF 名称映射失败:', e.message);
+        etfNameMapping = {};
+        etfNameMappingLoaded = true;
+    }
+    
+    return etfNameMapping;
+}
+
+function getEtfName(code) {
+    if (etfNameMapping && etfNameMapping[code]) {
+        return etfNameMapping[code];
+    }
+    return '';
+}
+
+async function addCode() {
     const input = document.getElementById('newCodeInput');
     const code = input.value.trim().toUpperCase();
     
@@ -518,11 +578,21 @@ function addCode() {
         return;
     }
     
+    // 加载 ETF 名称映射
+    await loadEtfNameMapping();
+    const name = getEtfName(code);
+    
     memberData.watchlist.push({
         code: code,
-        name: '',
+        name: name,
         added_at: new Date().toISOString()
     });
+    
+    if (name) {
+        console.log(`添加 ${code} ${name} 成功`);
+    } else {
+        console.log(`添加 ${code} (名称未知，Python脚本运行后将自动更新)`);
+    }
     
     hideAddCodeDialog();
     saveMemberData();
