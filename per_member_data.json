@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T08:33:34.292Z",
+  "last_updated": "2026-08-04T08:33:39.170Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -8,6 +8,11 @@
           "code": "512690",
           "name": "酒ETF",
           "added_at": "2026-08-04T07:13:05.014Z"
+        },
+        {
+          "code": "512010",
+          "name": "医药ETF",
+          "added_at": "2026-08-04T08:33:34.323Z"
         }
       ],
       "filter_status": "pending",
