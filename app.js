@@ -800,18 +800,32 @@ function showAuthLoading(show) {
 
 function updateCurrentTime() {
     const now = new Date();
-    const utc8Time = new Date(now.getTime() + (now.getTimezoneOffset() + 8) * 60000);
-    document.getElementById('currentTime').textContent = '🕐 ' + formatDateTime(utc8Time);
+    // 使用 toLocaleString 指定中国大陆时区 (Asia/Shanghai = UTC+8)
+    const chinaTime = now.toLocaleString('zh-CN', {
+        timeZone: 'Asia/Shanghai',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    document.getElementById('currentTime').textContent = '🕐 ' + chinaTime;
 }
 
 function formatDateTime(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+    // 使用 toLocaleString 确保返回中国大陆时间
+    return new Date(date).toLocaleString('zh-CN', {
+        timeZone: 'Asia/Shanghai',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
 }
 
 async function loadData() {
