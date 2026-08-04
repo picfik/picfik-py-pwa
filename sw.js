@@ -1,5 +1,5 @@
 // ETF 交易策略系统 - Service Worker
-const CACHE_NAME = 'etf-trading-system-v1';
+const CACHE_NAME = 'etf-trading-system-v2';
 const DATA_CACHE_NAME = 'etf-data-cache';
 
 // 需要缓存的核心资源
@@ -10,6 +10,9 @@ const CORE_ASSETS = [
     './app.js',
     './manifest.json'
 ];
+
+// 数据文件列表（使用网络优先策略）
+const DATA_FILES = ['data.json', 'members.json', 'per_member_data.json'];
 
 // 安装 Service Worker
 self.addEventListener('install', (event) => {
@@ -46,10 +49,13 @@ self.addEventListener('fetch', (event) => {
     // 只处理 GET 请求
     if (event.request.method !== 'GET') return;
     
-    // 对于数据请求 (data.json)，使用网络优先策略
-    if (requestUrl.pathname.endsWith('data.json') || requestUrl.pathname.endsWith('data')) {
+    // 检查是否为数据文件
+    const isDataFile = DATA_FILES.some(f => requestUrl.pathname.endsWith(f));
+    
+    // 对于数据文件，使用网络优先策略
+    if (isDataFile) {
         event.respondWith(
-            fetch(event.request)
+            fetch(event.request, { cache: 'no-store' })
                 .then((networkResponse) => {
                     // 更新缓存
                     caches.open(DATA_CACHE_NAME).then((cache) => {
@@ -80,7 +86,7 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
                 // 在后台更新缓存
-                fetch(event.request).then((networkResponse) => {
+                fetch(event.request, { cache: 'no-store' }).then((networkResponse) => {
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, networkResponse);
                     });
