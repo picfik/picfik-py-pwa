@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T06:46:09.136Z",
+  "last_updated": "2026-08-04T06:47:11.213Z",
   "members_data": {
     "picfik@126.com": {
       "email": "picfik@126.com",
@@ -8,10 +8,15 @@
           "code": "159916",
           "name": "",
           "added_at": "2026-08-04T06:46:09.073Z"
+        },
+        {
+          "code": "513180",
+          "name": "",
+          "added_at": "2026-08-04T06:47:11.138Z"
         }
       ],
-      "filter_status": "none",
-      "filter_requested_at": null,
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T06:46:12.088Z",
       "filter_completed_at": null,
       "results": [],
       "results_updated_at": null
