@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-04T07:10:44.440Z",
+  "last_updated": "2026-08-04T07:20:10.145Z",
   "members": [
     {
       "email": "picfik@126.com",
@@ -12,6 +12,12 @@
       "status": "approved",
       "expire_date": "2028-08-04",
       "created_at": "2026-08-04T07:10:44.440Z"
+    },
+    {
+      "email": "linchuwz@hotmail.com",
+      "status": "approved",
+      "expire_date": "2028-08-04",
+      "created_at": "2026-08-04T07:20:10.145Z"
     }
   ]
 }
