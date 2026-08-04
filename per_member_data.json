@@ -1,33 +1,35 @@
 {
-  "last_updated": "2026-08-04T16:32:23.646387",
+  "last_updated": "2026-08-04T08:32:56.153Z",
   "members_data": {
-    "linchuwz@126.com": {
-      "email": "linchuwz@126.com",
+    "picfik@126.com": {
+      "email": "picfik@126.com",
       "watchlist": [
         {
-          "code": "513180",
-          "name": "恒生科技ETF华夏",
-          "added_at": "2026-08-04T08:06:52.769Z"
-        }
-      ],
-      "filter_status": "completed",
-      "filter_requested_at": "2026-08-04T08:31:37.998Z",
-      "filter_completed_at": "2026-08-04T16:32:23.646237",
-      "results": [
+          "code": "159916",
+          "name": "",
+          "added_at": "2026-08-04T06:46:09.073Z"
+        },
         {
-          "etf_code": "513180",
-          "etf_name": "恒生科技ETF华夏",
-          "latest_price": 0.617,
-          "change": 0.33,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
+          "code": "513180",
+          "name": "",
+          "added_at": "2026-08-04T06:47:11.138Z"
+        },
+        {
+          "code": "159766",
+          "name": "",
+          "added_at": "2026-08-04T06:55:29.731Z"
+        },
+        {
+          "code": "512690",
+          "name": "",
+          "added_at": "2026-08-04T07:13:05.014Z"
         }
       ],
-      "results_updated_at": "2026-08-04T16:32:23.646243"
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T08:32:55.671Z",
+      "filter_completed_at": null,
+      "results": [],
+      "results_updated_at": "2026-08-04T15:13:43.111511"
     }
   }
 }
