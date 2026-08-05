@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-05T10:03:39.884928",
+  "last_updated": "2026-08-05T10:03:41.964647",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -48,11 +48,48 @@
           "added_at": "2026-08-05T02:01:41.212Z"
         }
       ],
-      "filter_status": "processing",
+      "filter_status": "completed",
       "filter_requested_at": "2026-08-05T02:01:50.221Z",
-      "filter_completed_at": null,
-      "results": [],
-      "results_updated_at": "2026-08-05T10:00:08.839663"
+      "filter_completed_at": "2026-08-05T10:03:41.964500",
+      "results": [
+        {
+          "etf_code": "512690",
+          "etf_name": "酒ETF",
+          "latest_price": 0.435,
+          "change": -1.36,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "是",
+          "sell_reason": "非PPP状态，满足卖出条件",
+          "action": "清仓",
+          "suggestion": "可清仓"
+        },
+        {
+          "etf_code": "512010",
+          "etf_name": "医药ETF",
+          "latest_price": 0.383,
+          "change": 0.0,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "否",
+          "sell_reason": "不满足卖出条件",
+          "action": "观望",
+          "suggestion": "观望"
+        },
+        {
+          "etf_code": "159201",
+          "etf_name": "自由现金流ETF华夏",
+          "latest_price": 1.16,
+          "change": -0.77,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "是",
+          "sell_reason": "非PPP状态，满足卖出条件",
+          "action": "清仓",
+          "suggestion": "可清仓"
+        }
+      ],
+      "results_updated_at": "2026-08-05T10:03:41.964505"
     }
   }
 }
