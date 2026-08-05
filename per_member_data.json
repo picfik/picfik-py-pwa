@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-05T10:00:05.981548",
+  "last_updated": "2026-08-05T10:00:08.839758",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -43,11 +43,36 @@
           "added_at": "2026-08-04T08:33:34.323Z"
         }
       ],
-      "filter_status": "processing",
+      "filter_status": "completed",
       "filter_requested_at": "2026-08-05T00:38:12.051Z",
-      "filter_completed_at": null,
-      "results": [],
-      "results_updated_at": "2026-08-04T15:13:43.111511"
+      "filter_completed_at": "2026-08-05T10:00:08.839656",
+      "results": [
+        {
+          "etf_code": "512690",
+          "etf_name": "酒ETF",
+          "latest_price": 0.434,
+          "change": -1.59,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "是",
+          "sell_reason": "非PPP状态，满足卖出条件",
+          "action": "清仓",
+          "suggestion": "可清仓"
+        },
+        {
+          "etf_code": "512010",
+          "etf_name": "医药ETF",
+          "latest_price": 0.384,
+          "change": 0.26,
+          "buy_signal": "否",
+          "buy_reason": "不满足买入条件",
+          "sell_signal": "否",
+          "sell_reason": "不满足卖出条件",
+          "action": "观望",
+          "suggestion": "观望"
+        }
+      ],
+      "results_updated_at": "2026-08-05T10:00:08.839663"
     }
   }
 }
