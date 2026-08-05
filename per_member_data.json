@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-05T10:00:08.839758",
+  "last_updated": "2026-08-05T02:01:41.259Z",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -41,10 +41,15 @@
           "code": "512010",
           "name": "医药ETF",
           "added_at": "2026-08-04T08:33:34.323Z"
+        },
+        {
+          "code": "159201",
+          "name": "自由现金流ETF华夏",
+          "added_at": "2026-08-05T02:01:41.212Z"
         }
       ],
-      "filter_status": "completed",
-      "filter_requested_at": "2026-08-05T00:38:12.051Z",
+      "filter_status": "pending",
+      "filter_requested_at": "2026-08-04T08:32:55.671Z",
       "filter_completed_at": "2026-08-05T10:00:08.839656",
       "results": [
         {
