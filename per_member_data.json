@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-05T02:01:47.868Z",
+  "last_updated": "2026-08-05T02:01:50.324Z",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -46,42 +46,12 @@
           "code": "159201",
           "name": "自由现金流ETF华夏",
           "added_at": "2026-08-05T02:01:41.212Z"
-        },
-        {
-          "code": "159766",
-          "name": "旅游ETF富国",
-          "added_at": "2026-08-05T02:01:47.812Z"
         }
       ],
       "filter_status": "pending",
-      "filter_requested_at": "2026-08-04T08:32:55.671Z",
-      "filter_completed_at": "2026-08-05T10:00:08.839656",
-      "results": [
-        {
-          "etf_code": "512690",
-          "etf_name": "酒ETF",
-          "latest_price": 0.434,
-          "change": -1.59,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "是",
-          "sell_reason": "非PPP状态，满足卖出条件",
-          "action": "清仓",
-          "suggestion": "可清仓"
-        },
-        {
-          "etf_code": "512010",
-          "etf_name": "医药ETF",
-          "latest_price": 0.384,
-          "change": 0.26,
-          "buy_signal": "否",
-          "buy_reason": "不满足买入条件",
-          "sell_signal": "否",
-          "sell_reason": "不满足卖出条件",
-          "action": "观望",
-          "suggestion": "观望"
-        }
-      ],
+      "filter_requested_at": "2026-08-05T02:01:50.221Z",
+      "filter_completed_at": null,
+      "results": [],
       "results_updated_at": "2026-08-05T10:00:08.839663"
     }
   }
