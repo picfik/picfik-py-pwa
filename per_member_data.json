@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-05T02:01:41.259Z",
+  "last_updated": "2026-08-05T02:01:47.868Z",
   "members_data": {
     "linchuwz@126.com": {
       "email": "linchuwz@126.com",
@@ -46,6 +46,11 @@
           "code": "159201",
           "name": "自由现金流ETF华夏",
           "added_at": "2026-08-05T02:01:41.212Z"
+        },
+        {
+          "code": "159766",
+          "name": "旅游ETF富国",
+          "added_at": "2026-08-05T02:01:47.812Z"
         }
       ],
       "filter_status": "pending",
